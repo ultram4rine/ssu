@@ -1,0 +1,10 @@
+﻿  matrix.cpp
+d:\users\ultramarine\source\repos\matrix\matrix\matrix.cpp(502): warning C4101: tau: неиспользованная локальная переменная
+d:\users\ultramarine\source\repos\matrix\matrix\matrix.cpp(502): warning C4101: s: неиспользованная локальная переменная
+d:\users\ultramarine\source\repos\matrix\matrix\matrix.cpp(502): warning C4101: c: неиспользованная локальная переменная
+d:\users\ultramarine\source\repos\matrix\matrix\matrix.cpp(502): warning C4101: t: неиспользованная локальная переменная
+d:\users\ultramarine\source\repos\matrix\matrix\matrix.cpp(557): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+d:\users\ultramarine\source\repos\matrix\matrix\matrix.cpp(570): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+d:\users\ultramarine\source\repos\matrix\matrix\matrix.cpp(374): warning C4715: Matrix::operator=: значение возвращается не при всех путях выполнения
+d:\users\ultramarine\source\repos\matrix\matrix\matrix.cpp(420): warning C4715: Matrix::operator-: значение возвращается не при всех путях выполнения
+  matrix.vcxproj -> D:\Users\ultramarine\source\repos\matrix\Debug\matrix.exe
