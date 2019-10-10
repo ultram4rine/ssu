@@ -1,6 +1,4 @@
-﻿#include "pch.h"
-
-#define _USE_MATH_DEFINES
+﻿#define _USE_MATH_DEFINES
 
 #include <iostream>
 #include <iomanip>

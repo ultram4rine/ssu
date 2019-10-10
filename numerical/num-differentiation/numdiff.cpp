@@ -1,5 +1,4 @@
-﻿#include "pch.h"
-#include <iostream>
+﻿#include <iostream>
 #include <cmath>
 #include <iomanip>
 
