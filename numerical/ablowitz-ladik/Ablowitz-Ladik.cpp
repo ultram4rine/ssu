@@ -6,26 +6,27 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <complex>
 #include <tuple>
 
-std::vector<double> F(double t, std::vector<double> u)
+std::vector<std::complex<double>> F(double t, std::complex<double> xi, std::vector<std::complex<double>> v)
 {
-	std::vector<double> res;
+	using namespace std::complex_literals;
 
-	res.push_back(2 * u.at(0) - u.at(1) + u.at(2));
-	res.push_back(u.at(0) + 2 * u.at(1) - u.at(2));
-	res.push_back(u.at(0) - u.at(1) + 2 * u.at(2));
+	std::vector<std::complex<double>> res;
+
+	res.push_back((cos(t) + 1) * v.at(1) - 1i * xi * v.at(0));
+	res.push_back(-1 * (cos(t) + 1) * v.at(0) + 1i * xi * v.at(1));
 
 	return res;
 }
 
-double x(double t, std::vector<double> C) { return C.at(1) * pow(M_E, 2 * t) + C.at(2) * pow(M_E, 3 * t); }
+double v1(double t, std::vector<double> C) { return C.at(1) * pow(M_E, 2 * t) + C.at(2) * pow(M_E, 3 * t); }
 
-double y(double t, std::vector<double> C) { return C.at(0) * pow(M_E, t) + C.at(1) * pow(M_E, 2 * t); }
+double v2(double t, std::vector<double> C) { return C.at(0) * pow(M_E, t) + C.at(1) * pow(M_E, 2 * t); }
 
-double z(double t, std::vector<double> C) { return C.at(0) * pow(M_E, t) + C.at(1) * pow(M_E, 2 * t) + C.at(2) * pow(M_E, 3 * t); }
-
-std::ostream& operator << (std::ostream& os, const std::vector<double>& v)
+template<class T>
+std::ostream& operator << (std::ostream& os, const std::vector<T>& v)
 {
 	std::stringstream buffer;
 
@@ -35,9 +36,10 @@ std::ostream& operator << (std::ostream& os, const std::vector<double>& v)
 	return os << buffer.str();
 }
 
-std::vector<double> operator+ (std::vector<double> vector, double term)
+template<class T>
+std::vector<T> operator+ (std::vector<T> vector, double term)
 {
-	std::vector<double> new_vector = vector;
+	std::vector<T> new_vector = vector;
 
 	for (auto i = new_vector.begin(); i != new_vector.end(); i++)
 		*i += term;
@@ -45,9 +47,10 @@ std::vector<double> operator+ (std::vector<double> vector, double term)
 	return new_vector;
 }
 
-std::vector<double> operator- (std::vector<double> vector, double deductible)
+template<class T>
+std::vector<T> operator- (std::vector<T> vector, double deductible)
 {
-	std::vector<double> new_vector = vector;
+	std::vector<T> new_vector = vector;
 
 	for (auto i = new_vector.begin(); i != new_vector.end(); i++)
 		*i -= deductible;
@@ -55,9 +58,10 @@ std::vector<double> operator- (std::vector<double> vector, double deductible)
 	return new_vector;
 }
 
-std::vector<double> operator* (double multiplier, std::vector<double> vector)
+template<class T>
+std::vector<T> operator* (double multiplier, std::vector<T> vector)
 {
-	std::vector<double> new_vector = vector;
+	std::vector<T> new_vector = vector;
 
 	for (auto i = new_vector.begin(); i != new_vector.end(); i++)
 		*i *= multiplier;
@@ -65,9 +69,10 @@ std::vector<double> operator* (double multiplier, std::vector<double> vector)
 	return new_vector;
 }
 
-std::vector<double> operator* (std::vector<double> vector, double multiplier)
+template<class T>
+std::vector<T> operator* (std::vector<T> vector, double multiplier)
 {
-	std::vector<double> new_vector = vector;
+	std::vector<T> new_vector = vector;
 
 	for (auto i = new_vector.begin(); i != new_vector.end(); i++)
 		*i *= multiplier;
@@ -75,9 +80,10 @@ std::vector<double> operator* (std::vector<double> vector, double multiplier)
 	return new_vector;
 }
 
-std::vector<double> operator/ (std::vector<double> vector, double divider)
+template<class T>
+std::vector<T> operator/ (std::vector<T> vector, double divider)
 {
-	std::vector<double> new_vector = vector;
+	std::vector<T> new_vector = vector;
 
 	for (auto i = new_vector.begin(); i != new_vector.end(); i++)
 		*i /= divider;
@@ -85,9 +91,9 @@ std::vector<double> operator/ (std::vector<double> vector, double divider)
 	return new_vector;
 }
 
-std::vector<double> operator+ (std::vector<double> a, std::vector<double> b)
+std::vector<std::complex<double>> operator+ (std::vector<std::complex<double>> a, std::vector<std::complex<double>> b)
 {
-	std::vector<double> new_vector;
+	std::vector<std::complex<double>> new_vector;
 
 	for (auto i = 0; i < a.size(); i++)
 		new_vector.push_back(a.at(i) + b.at(i));
@@ -95,9 +101,9 @@ std::vector<double> operator+ (std::vector<double> a, std::vector<double> b)
 	return new_vector;
 }
 
-std::vector<double> operator- (std::vector<double> a, std::vector<double> b)
+std::vector<std::complex<double>> operator- (std::vector<std::complex<double>> a, std::vector<std::complex<double>> b)
 {
-	std::vector<double> new_vector;
+	std::vector<std::complex<double>> new_vector;
 
 	for (auto i = 0; i < a.size(); i++)
 		new_vector.push_back(a.at(i) - b.at(i));
@@ -105,7 +111,8 @@ std::vector<double> operator- (std::vector<double> a, std::vector<double> b)
 	return new_vector;
 }
 
-std::vector<std::vector<double>> operator>> (std::vector<std::vector<double>> v, std::vector<double> element)
+template<class T>
+std::vector<std::vector<T>> operator>> (std::vector<std::vector<T>> v, std::vector<T> element)
 {
 	v.at(0) = v.at(1);
 	v.at(1) = v.at(2);
@@ -114,10 +121,10 @@ std::vector<std::vector<double>> operator>> (std::vector<std::vector<double>> v,
 	return v;
 }
 
-std::vector<double> AdamsPredictor(int n, double t, double grid_start, double grid_end, std::vector<std::vector<double>> fs, std::vector<std::vector<double>> approximation)
+std::vector<std::complex<double>> AdamsPredictor(int n, double t, double grid_start, double grid_end, std::vector<std::vector<std::complex<double>>> fs, std::vector<std::vector<std::complex<double>>> approximation)
 {
 	double h = (grid_end - grid_start) / n;
-	std::vector<double> predictor, k;
+	std::vector<std::complex<double>> predictor, k;
 
 	k = 23 * fs.at(2) - 16 * fs.at(1) + 5 * fs.at(0);
 
@@ -128,25 +135,25 @@ std::vector<double> AdamsPredictor(int n, double t, double grid_start, double gr
 	return predictor;
 }
 
-std::vector<double> AdamsCorrector(int n, double t, double grid_start, double grid_end, std::vector<double> prediction, std::vector<std::vector<double>> fs, std::vector<std::vector<double>> approximation)
+std::vector<std::complex<double>> AdamsCorrector(int n, double t, std::complex<double> xi, double grid_start, double grid_end, std::vector<std::complex<double>> prediction, std::vector<std::vector<std::complex<double>>> fs, std::vector<std::vector<std::complex<double>>> approximation)
 {
 	double h = (grid_end - grid_start) / n;
-	std::vector<double> correction, fi = prediction;
+	std::vector<std::complex<double>> correction, fi = prediction;
 	int j = 0;
 
 	do
 	{
 		correction = fi;
-		std::vector<double> k;
+		std::vector<std::complex<double>> k;
 
-		k = 5 * F(t + 3 * h, correction) + 8 * fs.at(2) - fs.at(1);
+		k = 5 * F(t + 3 * h, xi, correction) + 8 * fs.at(2) - fs.at(1);
 		fi = approximation.at(2) + h / 12 * k;
 
 		//k = 9 * F(t + 3 * h, correction) + 19 * fs.at(2) - 5 * fs.at(1) + fs.at(0);
 		//fi = approximation.at(2) + h / 24 * k;
 
 		j++;
-	} while (fabs(correction.at(0) - fi.at(0)) > DBL_EPSILON&& fabs(correction.at(1) - fi.at(1)) > DBL_EPSILON&& fabs(correction.at(2) - fi.at(2)) > DBL_EPSILON);
+	} while (std::abs(correction.at(0) - fi.at(0)) > DBL_EPSILON && std::abs(correction.at(1) - fi.at(1)) > DBL_EPSILON && std::abs(correction.at(2) - fi.at(2)) > DBL_EPSILON);
 
 	//fabs(correction.at(0) - fi.at(0)) > DBL_EPSILON&&fabs(correction.at(1) - fi.at(1)) > DBL_EPSILON&&fabs(correction.at(2) - fi.at(2)) > DBL_EPSILON
 
@@ -155,35 +162,36 @@ std::vector<double> AdamsCorrector(int n, double t, double grid_start, double gr
 	return correction;
 }
 
-std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>> ExplicitRungeKutta(int n, int accuracy_order, double grid_start, double grid_end, std::vector<double> f0, bool for_init)
+std::tuple<std::vector<std::vector<std::complex<double>>>, std::vector<std::vector<std::complex<double>>>> ExplicitRungeKutta(int n, int accuracy_order, double grid_start, double grid_end, std::vector<std::complex<double>> f0, bool for_init)
 {
 	double h = (grid_end - grid_start) / n, t = h;
-	std::vector<std::vector<double>> approximations, fs;
+	std::complex<double> xi;
+	std::vector<std::vector<std::complex<double>>> approximations, fs;
 
 	approximations.push_back(f0);
 
 	if (for_init)
 	{
 		n = accuracy_order - 1;
-		fs.push_back(F(t - h, approximations.at(0)));
+		fs.push_back(F(t - h, xi, approximations.at(0)));
 	}
 
 	for (auto i = 0; i < n; i++)
 	{
 		t -= h;
-		std::vector<double> f, k1, k2, k3;
+		std::vector<std::complex<double>> f, k1, k2, k3;
 
-		k1 = h * F(t, f0);
+		k1 = h * F(t, xi, f0);
 
-		k2 = h * F(t + h / 2, f0 + k1 / 2);
+		k2 = h * F(t + h / 2, xi, f0 + k1 / 2);
 
-		k3 = h * F(t + h, f0 + 2 * k2 - k1);
+		k3 = h * F(t + h, xi, f0 + 2 * k2 - k1);
 
 		f = f0 + (k1 + 4 * k2 + k3) / 6;
 
 		approximations.push_back(f);
 		if (for_init)
-			fs.push_back(F(t + h, approximations.at(i + 1.0)));
+			fs.push_back(F(t + h, xi, approximations.at(i + 1.0)));
 
 		f0 = f;
 		t += 2 * h;
@@ -192,11 +200,11 @@ std::tuple<std::vector<std::vector<double>>, std::vector<std::vector<double>>> E
 	return std::make_tuple(fs, approximations);
 }
 
-std::vector<std::vector<double>> ImplicitAdamsPC(int n, int accuracy_order, double grid_start, double grid_end, std::vector<double> f0)
+std::vector<std::vector<std::complex<double>>> ImplicitAdamsPC(int n, std::complex<double> xi, int accuracy_order, double grid_start, double grid_end, std::vector<std::complex<double>> f0)
 {
 	double t = 0, h = (grid_end - grid_start) / n;
-	std::vector<double> correction, prediction;
-	std::vector<std::vector<double>> fs, approximation, approximation_on_grid;
+	std::vector<std::complex<double>> correction, prediction;
+	std::vector<std::vector<std::complex<double>>> fs, approximation, approximation_on_grid;
 
 	std::tie(fs, approximation) = ExplicitRungeKutta(n, accuracy_order, grid_start, grid_end, f0, true);
 
@@ -206,9 +214,9 @@ std::vector<std::vector<double>> ImplicitAdamsPC(int n, int accuracy_order, doub
 	for (auto j = accuracy_order; j <= n; j++)
 	{
 		prediction = AdamsPredictor(n, t, grid_start, grid_end, fs, approximation);
-		correction = AdamsCorrector(n, t, grid_start, grid_end, prediction, fs, approximation);
+		correction = AdamsCorrector(n, t, xi, grid_start, grid_end, prediction, fs, approximation);
 
-		fs = (fs >> F(t + 3 * h, correction));
+		fs = (fs >> F(t + 3 * h, xi, correction));
 		approximation = (approximation >> correction);
 
 		t = t + h;
@@ -223,12 +231,13 @@ int main()
 {
 	const int k = 3; int i = 0, M = 10;
 	double T1 = 0, T2 = 1, j = T1;
+	std::complex<double> xi = 0;
 	double min_error, errorImAdams, prev_errorImAdams;
 
 	std::string goon = "y";
 
-	std::vector<double> f0 = { 0, 2, 1 }, C = { 1, 1, -1 };
-	std::vector<std::vector<double>> by_effect, approximation_by_RK3, approximation_by_ExAdams, approximation_by_ImAdams;
+	std::vector<std::complex<double>> f0 = { 0, 2, 1 }; std::vector<double> C = { 1, 1, -1 };
+	std::vector<std::vector<std::complex<double>>> approximation_by_RK3, approximation_by_ImAdams;
 
 	std::cout << "Initial values: t = " << T1 << '\n'
 		<< "x(t) = " << f0.at(0) << '\n'
@@ -242,7 +251,7 @@ int main()
 		std::cout << "eps = " << eps << '\n'
 			<< "Number of nodes = " << M << '\n' << '\n';
 
-		approximation_by_ImAdams = ImplicitAdamsPC(M, k, T1, T2, f0);
+		approximation_by_ImAdams = ImplicitAdamsPC(M, xi, k, T1, T2, f0);
 
 		std::cout << std::setprecision(5);
 
@@ -254,8 +263,7 @@ int main()
 				<< "z(t) = " << z(j, C) << "   ~z(t) = " << i->at(2) << "   z(t) - ~z(t) = " << z(j, C) - i->at(2) << '\n' << '\n';
 			*/
 
-			fabs(x(j, C) - i->at(0)) > fabs(y(j, C) - i->at(1)) ? errorImAdams = fabs(x(j, C) - i->at(0)) : errorImAdams = fabs(y(j, C) - i->at(1));
-			fabs(z(j, C) - i->at(2)) > errorImAdams ? errorImAdams = fabs(z(j, C) - i->at(2)) : errorImAdams = errorImAdams;
+			std::abs(v1(j, C) - i->at(0)) > std::abs(v2(j, C) - i->at(1)) ? errorImAdams = std::abs(v1(j, C) - i->at(0)) : errorImAdams = std::abs(v2(j, C) - i->at(1));
 
 			j += eps;
 		}
