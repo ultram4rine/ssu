@@ -34,7 +34,7 @@ std::tuple<vector, cvector, vector> matrix_init(int N, double h)
 {
 	using namespace std::complex_literals;
 
-	vector a(N / h, 1); cvector c(N / h, -2. - h * h * 2i); vector b(N / h, 1);
+	vector a(N / h, -1); cvector c(N / h, 2. + h * h * 2i); vector b(N / h, -1);
 
 	a.at(0) = 0;
 	b.at(N / h - 1) = 0;
