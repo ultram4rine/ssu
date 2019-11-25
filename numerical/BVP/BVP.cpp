@@ -11,8 +11,6 @@ typedef std::complex<double> complex;
 typedef std::vector<double> vector;
 typedef std::vector<std::complex<double>> cvector;
 
-typedef std::complex<double>(*function)(double x);
-
 std::complex<double> y(double x)
 {
 	using namespace std::complex_literals;
@@ -86,25 +84,25 @@ int main()
 	{
 		cvector u = ThomasAlg(N, h);
 
-		/*for (auto local_h = h; local_h <= N; local_h += h)
+		/*
+		for (auto local_h = h; local_h <= N; local_h += h)
 			std::cout << y(local_h) << '\n';
-
 		std::cout << '\n';
 
 		for (auto i = u.begin(); i < u.end(); i++)
 			std::cout << *i << '\n';
-
-		std::cout << '\n';*/
+		std::cout << '\n';
+		*/
 
 		double local_h = h;
 
-		error = abs(y(local_h)) - abs(u.at(0));
+		error = fabs(abs(y(local_h)) - abs(u.at(0)));
 
 		for (auto i = u.begin(); i < u.end(); i++)
 		{
-			abs(y(local_h)) - abs(*i) > error ? error = abs(y(local_h)) - abs(*i) : error;
+			fabs(abs(y(local_h)) - abs(*i)) > error ? error = fabs(abs(y(local_h)) - abs(*i)) : error;
 
-			//std::cout << "diff at " << h << ": " << abs(y(local_h)) - abs(*i) << '\n';
+			std::cout << "diff at " << local_h << ": " << fabs(abs(y(local_h)) - abs(*i)) << '\n';
 			local_h += h;
 		}
 
