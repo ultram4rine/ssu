@@ -74,26 +74,6 @@ double central_finite_difference(function f, double x, double h)
 	return (f(x + h) - f(x - h)) / (2 * h);
 }
 
-double Sin_derivative_finite_difference(double x, double h)
-{
-	return (sin(x + h) - sin(x)) / h;
-}
-
-double mod_Sin_derivative_finite_difference(double x, double h)
-{
-	return (fabs(sin(x + h)) - fabs(sin(x))) / h;
-}
-
-double Power_derivative_finite_difference(double x, double a, double h)
-{
-	return (pow(x + h, a) - pow(x, a)) / h;
-}
-
-double Custom_derivative_finite_difference(double x, double a, double h)
-{
-	return (pow(x + h, a) * sin(1 / (x + h)) - pow(x, a) * sin(1 / x)) / h;
-}
-
 int main()
 {
 	double h, x;
