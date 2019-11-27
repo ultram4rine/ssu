@@ -12,7 +12,7 @@ double K(double x, double t)
 
 double u(double x)
 {
-	return pow(M_PI, 4) / 36 - (pow(M_PI, 2) * cos(x)) / 18 + 1 - (2 * x) / M_PI;
+	return -1. * (pow(M_PI, 2) * cos(x)) / 18 + 1 - (2 * x) / M_PI;
 }
 
 double f(double x)
@@ -107,7 +107,7 @@ std::vector<double> Gauss(double** A, std::vector<double> b)
 		max = abs(A[k][k]);
 		index = k;
 
-		for (auto i=k+1;i<n;i++)
+		for (auto i = k + 1; i < n; i++)
 			if (abs(A[i][k]) > max)
 			{
 				max = abs(A[i][k]);
@@ -163,6 +163,33 @@ std::vector<double> Gauss(double** A, std::vector<double> b)
 	return x;
 }
 
+std::vector<double> Jacobi(double** A, std::vector<double> b, std::vector<double> x)
+{
+	int n = b.size();
+	std::vector<double> tmp(n);
+	double norm;
+
+	do {
+		for (int i = 0; i < n; i++) {
+			tmp.at(i) = b.at(i);
+			for (int j = 0; j < n; j++) {
+				if (i != j)
+					tmp.at(i) -= A[i][j] * x.at(j);
+			}
+			tmp.at(i) /= A[i][i];
+		}
+
+		norm = fabs(x.at(0) - tmp.at(0));
+		for (int k = 0; k < n; k++) {
+			if (fabs(x.at(k) - tmp.at(k)) > norm)
+				norm = fabs(x.at(k) - tmp.at(k));
+			x.at(k) = tmp.at(k);
+		}
+	} while (norm > 0.0001);
+
+	return x;
+}
+
 int main()
 {
 	const double a = 0, b = M_PI;
@@ -174,30 +201,27 @@ int main()
 
 	std::vector<double> w = w_init(n, x);
 
-	double** A = matrix_init(n, ksi, w);
+	double** A1 = matrix_init(n, ksi, w);
+	double** A2 = matrix_init(n, ksi, w);
 
-	std::vector<double> c = f_init(n, x);
-
-	for (auto i = 0; i < n; i++)
-		printf("ksi%d = %f\n", i, ksi.at(i));
-
-	for (auto i = 0; i < n; i++)
-		printf("w%d = %f\n", i, w.at(i));
-
-	printf("\n");
-
-	for (auto i = 0; i < n; i++)
+	/*for (auto i = 0; i < n; i++)
 	{
 		for (auto j = 0; j < n; j++)
-			std::cout << std::setw(15) << A[i][j];
+			std::cout << A1[i][j] << "   ";
 
 		std::cout << '\n';
-	}
+	}*/
 
+	std::vector<double> c = f_init(n, ksi);
+
+	std::vector<double> u_appr_gauss = Gauss(A1, c);
+	std::vector<double> u_appr_jacobi = Jacobi(A2, c, u_appr_gauss);
+
+	for (auto i = 0; i < n; i++)
+		std::cout << fabs(u(ksi.at(i)) - u_appr_gauss.at(i)) << '\n';
 	printf("\n");
 
-	std::vector<double> u_appr = Gauss(A, c);
-
-	for (auto i = u_appr.begin(); i < u_appr.end(); i++)
-		std::cout << *i << '\n';
+	for (auto i = 0; i < n; i++)
+		std::cout << fabs(u(ksi.at(i)) - u_appr_jacobi.at(i)) << '\n';
+	printf("\n");
 }
