@@ -134,6 +134,7 @@ def write_works_to_xml(works, filename):
         work.set('id', w.id)
 
         route = ET.SubElement(work, 'route')
+        route.set('id', w.route.id)
 
         name = ET.SubElement(route, 'name')
         name.text = w.route.name
@@ -148,6 +149,7 @@ def write_works_to_xml(works, filename):
         payment.text = w.route.payment
 
         driver = ET.SubElement(work, 'driver')
+        driver.set('id', w.driver.id)
 
         surname = ET.SubElement(driver, 'surname')
         surname.text = w.driver.surname
