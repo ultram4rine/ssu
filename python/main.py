@@ -2,7 +2,7 @@ import datetime
 import csv
 from classes import Route, Driver, Work
 from csv_work import read_routes_from_csv, read_drivers_from_csv, read_works_from_csv, write_routes_to_csv, write_drivers_to_csv, write_works_to_csv
-from xml_work import read_drivers_from_xml, read_routes_from_xml, read_works_from_xml, write_route_to_xml, write_driver_to_xml
+from xml_work import read_drivers_from_xml, read_routes_from_xml, read_works_from_xml, write_routes_to_xml, write_drivers_to_xml, write_works_to_xml
 
 routesCSV = read_routes_from_csv('csv/routes.csv')
 for route in routesCSV:
@@ -35,6 +35,8 @@ worksXML = read_works_from_xml('xml/works.xml')
 for work in worksXML:
     work.display_info()
 
-write_route_to_xml(routesXML, 'xml/out/routes.xml')
+write_routes_to_xml(routesXML, 'xml/out/routes.xml')
 
-write_driver_to_xml(driversXML, 'xml/out/drivers.xml')
+write_drivers_to_xml(driversXML, 'xml/out/drivers.xml')
+
+write_works_to_xml(worksXML, 'xml/out/works.xml')

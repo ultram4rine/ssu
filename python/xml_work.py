@@ -72,13 +72,14 @@ def read_works_from_xml(filename):
     return works
 
 
-def write_route_to_xml(routes, filename):
+def write_routes_to_xml(routes, filename):
     data = ET.Element('data')
 
     routesEL = ET.SubElement(data, 'routes')
 
     for r in routes:
         route = ET.SubElement(routesEL, 'route')
+        route.set('id', r.id)
 
         name = ET.SubElement(route, 'name')
         name.text = r.name
@@ -97,13 +98,14 @@ def write_route_to_xml(routes, filename):
     file.write(mydata)
 
 
-def write_driver_to_xml(drivers, filename):
+def write_drivers_to_xml(drivers, filename):
     data = ET.Element('data')
 
     driversEL = ET.SubElement(data, 'drivers')
 
     for d in drivers:
-        driver = ET.SubElement(driversEL, 'route')
+        driver = ET.SubElement(driversEL, 'driver')
+        driver.set('id', d.id)
 
         surname = ET.SubElement(driver, 'surname')
         surname.text = d.surname
@@ -116,6 +118,57 @@ def write_driver_to_xml(drivers, filename):
 
         exp = ET.SubElement(driver, 'exp')
         exp.text = d.exp
+
+    mydata = ET.tostring(data, encoding="unicode")
+    file = open(filename, "w")
+    file.write(mydata)
+
+
+def write_works_to_xml(works, filename):
+    data = ET.Element('data')
+
+    worksEL = ET.SubElement(data, 'works')
+
+    for w in works:
+        work = ET.SubElement(worksEL, 'work')
+        work.set('id', w.id)
+
+        route = ET.SubElement(work, 'route')
+
+        name = ET.SubElement(route, 'name')
+        name.text = w.route.name
+
+        distance = ET.SubElement(route, 'distance')
+        distance.text = w.route.distance
+
+        days = ET.SubElement(route, 'days')
+        days.text = w.route.days
+
+        payment = ET.SubElement(route, 'payment')
+        payment.text = w.route.payment
+
+        driver = ET.SubElement(work, 'driver')
+
+        surname = ET.SubElement(driver, 'surname')
+        surname.text = w.driver.surname
+
+        name = ET.SubElement(driver, 'name')
+        name.text = w.driver.name
+
+        patronymic = ET.SubElement(driver, 'patronymic')
+        patronymic.text = w.driver.patronymic
+
+        exp = ET.SubElement(driver, 'exp')
+        exp.text = w.driver.exp
+
+        date_departure = ET.SubElement(work, 'date_departure')
+        date_departure.text = w.date_departure
+
+        date_return = ET.SubElement(work, 'date_return')
+        date_return.text = w.date_return
+
+        premium = ET.SubElement(work, 'premium')
+        premium.text = w.premium
 
     mydata = ET.tostring(data, encoding="unicode")
     file = open(filename, "w")
