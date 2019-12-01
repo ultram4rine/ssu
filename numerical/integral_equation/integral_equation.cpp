@@ -30,31 +30,51 @@ double get_w(double ksi)
 	return 2 / ((1 - pow(ksi, 2)) * pow((15 * pow(ksi, 2) - 3) / 2, 2));
 }
 
-std::vector<double> ksi_init(int n, double a, double b, std::vector<double> x)
+std::vector<double> ksi_init(int n, double h, int N, double a, std::vector<double> x)
 {
 	std::vector<double> vec;
+	double b = h;
 
-	for (auto i = 0; i < n; i++)
-		vec.push_back(get_ksi(a, b, x.at(i)));
+	int j = 0;
+	for (auto i = 0; i < n * N; i++)
+	{
+		vec.push_back(get_ksi(a, b, x.at(j)));
+		
+		if ((i + 1) % n == 0)
+		{
+			a += h; b += h;
+		}
+
+		j++;
+		if (j == n)
+			j = 0;
+	}
 
 	return vec;
 }
 
-std::vector<double> w_init(int n, std::vector<double> x)
+std::vector<double> w_init(int n, int N, std::vector<double> x)
 {
 	std::vector<double> vec;
 
-	for (auto i = 0; i < n; i++)
-		vec.push_back(get_w(x.at(i)));
+	int j = 0;
+	for (auto i = 0; i < n * N; i++)
+	{
+		vec.push_back(get_w(x.at(j)));
+
+		j++;
+		if (j == n)
+			j = 0;
+	}
 
 	return vec;
 }
 
-std::vector<double> f_init(int n, std::vector<double> ksi)
+std::vector<double> f_init(int n, int N, std::vector<double> ksi)
 {
 	std::vector<double> vec;
 
-	for (auto i = 0; i < n; i++)
+	for (auto i = 0; i < n * N; i++)
 		vec.push_back(f(ksi.at(i)));
 
 	return vec;
@@ -75,19 +95,22 @@ std::vector<double> operator * (double** matr, std::vector<double> vec)
 	return res;
 }
 
-double** matrix_init(int n, std::vector<double> ksi, std::vector<double> w)
+double** matrix_init(int n, double h, int N, std::vector<double> ksi, std::vector<double> w)
 {
-	double** matrix = new double* [n];
-	for (auto i = 0; i < n; i++)
-	{
-		matrix[i] = new double[n];
+	int size = n * N;
+	double c = h / 2;
 
-		for (auto j = 0; j < n; j++)
+	double** matrix = new double* [size];
+	for (auto i = 0; i < size; i++)
+	{
+		matrix[i] = new double[size];
+
+		for (auto j = 0; j < size; j++)
 		{
 			if (i == j)
-				matrix[i][j] = (1 - M_PI_2 * w.at(j) * K(ksi.at(i), ksi.at(j)));
+				matrix[i][j] = (1 - c * w.at(j) * K(ksi.at(i), ksi.at(j)));
 			else
-				matrix[i][j] = -1. * (M_PI_2 * w.at(j) * K(ksi.at(i), ksi.at(j)));
+				matrix[i][j] = -1. * (c * w.at(j) * K(ksi.at(i), ksi.at(j)));
 		}
 	}
 
@@ -163,65 +186,49 @@ std::vector<double> Gauss(double** A, std::vector<double> b)
 	return x;
 }
 
-std::vector<double> Jacobi(double** A, std::vector<double> b, std::vector<double> x)
-{
-	int n = b.size();
-	std::vector<double> tmp(n);
-	double norm;
-
-	do {
-		for (int i = 0; i < n; i++) {
-			tmp.at(i) = b.at(i);
-			for (int j = 0; j < n; j++) {
-				if (i != j)
-					tmp.at(i) -= A[i][j] * x.at(j);
-			}
-			tmp.at(i) /= A[i][i];
-		}
-
-		norm = fabs(x.at(0) - tmp.at(0));
-		for (int k = 0; k < n; k++) {
-			if (fabs(x.at(k) - tmp.at(k)) > norm)
-				norm = fabs(x.at(k) - tmp.at(k));
-			x.at(k) = tmp.at(k);
-		}
-	} while (norm > 0.0001);
-
-	return x;
-}
-
 int main()
 {
 	const double a = 0, b = M_PI;
 	const int n = 3, accuracy_degree = 2 * n - 1;
 
+	double h = (b - a);
+
 	std::vector<double> x = { -sqrt(3. / 5.), 0, sqrt(3. / 5.) };
 
-	std::vector<double> ksi = ksi_init(n, a, b, x);
+	std::string goon = "y";
 
-	std::vector<double> w = w_init(n, x);
-
-	double** A1 = matrix_init(n, ksi, w);
-	double** A2 = matrix_init(n, ksi, w);
-
-	/*for (auto i = 0; i < n; i++)
+	while (goon == "y")
 	{
-		for (auto j = 0; j < n; j++)
-			std::cout << A1[i][j] << "   ";
+		int N = (b - a) / h;
 
+		std::vector<double> ksi = ksi_init(n, h, N, a, x);
+
+		std::vector<double> w = w_init(n, N, x);
+
+
+		double** A = matrix_init(n, h, N, ksi, w);
+
+		/*for (auto i = 0; i < n * N; i++)
+		{
+			for (auto j = 0; j < n * N; j++)
+				std::cout << A[i][j] << "   ";
+
+			std::cout << '\n';
+		}*/
 		std::cout << '\n';
-	}*/
 
-	std::vector<double> c = f_init(n, ksi);
+		std::vector<double> c = f_init(n, N, ksi);
 
-	std::vector<double> u_appr_gauss = Gauss(A1, c);
-	std::vector<double> u_appr_jacobi = Jacobi(A2, c, u_appr_gauss);
+		std::vector<double> u_appr = Gauss(A, c);
 
-	for (auto i = 0; i < n; i++)
-		std::cout << fabs(u(ksi.at(i)) - u_appr_gauss.at(i)) << '\n';
-	printf("\n");
+		for (auto i = 0; i < n * N; i++)
+			std::cout << fabs(u(ksi.at(i)) - u_appr.at(i)) << '\n';
 
-	for (auto i = 0; i < n; i++)
-		std::cout << fabs(u(ksi.at(i)) - u_appr_jacobi.at(i)) << '\n';
-	printf("\n");
+		std::cout << '\n' << "Continue(y/n)?: ";
+		std::cin >> goon;
+
+		h /= 2;
+	}
+
+	
 }
