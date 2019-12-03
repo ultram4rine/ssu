@@ -188,10 +188,11 @@ std::vector<double> Gauss(double** A, std::vector<double> b)
 
 int main()
 {
+	int k = 0;
 	const double a = 0, b = M_PI;
 	const int n = 3, accuracy_degree = 2 * n - 1;
 
-	double h = (b - a);
+	double h = (b - a), error, prev_error;
 
 	std::vector<double> x = { -sqrt(3. / 5.), 0, sqrt(3. / 5.) };
 
@@ -204,7 +205,6 @@ int main()
 		std::vector<double> ksi = ksi_init(n, h, N, a, x);
 
 		std::vector<double> w = w_init(n, N, x);
-
 
 		double** A = matrix_init(n, h, N, ksi, w);
 
@@ -221,14 +221,24 @@ int main()
 
 		std::vector<double> u_appr = Gauss(A, c);
 
+		error = fabs(u(ksi.at(0)) - u_appr.at(0));
+
 		for (auto i = 0; i < n * N; i++)
-			std::cout << fabs(u(ksi.at(i)) - u_appr.at(i)) << '\n';
+			fabs(u(ksi.at(i)) - u_appr.at(i)) > error ? error = fabs(u(ksi.at(i)) - u_appr.at(i)) : error;
+
+		std::cout << '\n' << error << '\n' << '\n';
+
+		if (k != 0)
+			std::cout << "Expected error ratio: " << 64 << '\n' << std::setprecision(10)
+			<< "Actual error ratio: " << prev_error / error << '\n' << '\n';
 
 		std::cout << '\n' << "Continue(y/n)?: ";
 		std::cin >> goon;
 
-		h /= 2;
-	}
+		k++;
 
-	
+		h /= 2;
+
+		prev_error = error;
+	}
 }
