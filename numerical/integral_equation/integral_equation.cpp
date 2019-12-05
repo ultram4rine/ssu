@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <vector>
 #include <cmath>
+#include <tuple>
 
 double K(double x, double t)
 {
@@ -25,9 +26,9 @@ double get_ksi(double a, double b, double x)
 	return (a + b + (b - a) * x) / 2;
 }
 
-double get_w(double ksi)
+double get_w(double x)
 {
-	return 2 / ((1 - pow(ksi, 2)) * pow((15 * pow(ksi, 2) - 3) / 2, 2));
+	return 2 / ((1 - pow(x, 2)) * pow((15 * pow(x, 2) - 3) / 2, 2));
 }
 
 std::vector<double> ksi_init(int n, double h, int N, double a, std::vector<double> x)
@@ -53,33 +54,6 @@ std::vector<double> ksi_init(int n, double h, int N, double a, std::vector<doubl
 	return vec;
 }
 
-std::vector<double> w_init(int n, int N, std::vector<double> x)
-{
-	std::vector<double> vec;
-
-	int j = 0;
-	for (auto i = 0; i < n * N; i++)
-	{
-		vec.push_back(get_w(x.at(j)));
-
-		j++;
-		if (j == n)
-			j = 0;
-	}
-
-	return vec;
-}
-
-std::vector<double> f_init(int n, int N, std::vector<double> ksi)
-{
-	std::vector<double> vec;
-
-	for (auto i = 0; i < n * N; i++)
-		vec.push_back(f(ksi.at(i)));
-
-	return vec;
-}
-
 std::vector<double> operator * (double** matr, std::vector<double> vec)
 {
 	std::vector<double> res(vec.size());
@@ -95,26 +69,52 @@ std::vector<double> operator * (double** matr, std::vector<double> vec)
 	return res;
 }
 
-double** matrix_init(int n, double h, int N, std::vector<double> ksi, std::vector<double> w)
+std::tuple<double**, std::vector<double>> init(int n, double h, int N, double a, std::vector<double> x)
 {
-	int size = n * N;
-	double c = h / 2;
+	int size = n * N, k = 0, l = 0;
+	double c = h / 2, ksi_i, ksi_j;
+
+	double a_i = a, a_j = a, b_i = h, b_j = h;
+
+	std::vector<double> free_members;
 
 	double** matrix = new double* [size];
 	for (auto i = 0; i < size; i++)
 	{
 		matrix[i] = new double[size];
 
+		ksi_i = get_ksi(a_i, b_i, x.at(k));
+
 		for (auto j = 0; j < size; j++)
 		{
+			ksi_j = get_ksi(a_j, b_j, x.at(l));
+
 			if (i == j)
-				matrix[i][j] = (1 - c * w.at(j) * K(ksi.at(i), ksi.at(j)));
+				matrix[i][j] = (1 - c * get_w(x.at(l)) * K(ksi_i, ksi_j));
 			else
-				matrix[i][j] = -1. * (c * w.at(j) * K(ksi.at(i), ksi.at(j)));
+				matrix[i][j] = -1. * (c * get_w(x.at(l)) * K(ksi_i, ksi_j));
+
+			l++;
+			if (l == n)
+			{
+				l = 0;
+				a_j += h;
+				b_j += h;
+			}
+		}
+
+		free_members.push_back(f(ksi_i));
+
+		k++;
+		if (k == n)
+		{
+			k = 0;
+			a_i += h;
+			b_i += h;
 		}
 	}
 
-	return matrix;
+	return std::make_tuple(matrix, free_members);
 }
 
 std::vector<double> Gauss(double** A, std::vector<double> b)
@@ -201,12 +201,15 @@ int main()
 	while (goon == "y")
 	{
 		int N = (b - a) / h;
+		std::cout << "N = " << N << '\n';
+		std::cout << "Size = " << n * N << '\n';
 
 		std::vector<double> ksi = ksi_init(n, h, N, a, x);
 
-		std::vector<double> w = w_init(n, N, x);
+		double** A;
+		std::vector<double> c;
 
-		double** A = matrix_init(n, h, N, ksi, w);
+		std::tie(A, c) = init(n, h, N, a, x);
 
 		/*for (auto i = 0; i < n * N; i++)
 		{
@@ -215,11 +218,11 @@ int main()
 
 			std::cout << '\n';
 		}*/
-		std::cout << '\n';
-
-		std::vector<double> c = f_init(n, N, ksi);
 
 		std::vector<double> u_appr = Gauss(A, c);
+
+		/*for (auto i = 0; i < n * N; i++)
+			std::cout << u(ksi.at(i)) << "  ~  " << u_appr.at(i) <<'\n';*/
 
 		error = fabs(u(ksi.at(0)) - u_appr.at(0));
 
@@ -234,6 +237,7 @@ int main()
 
 		std::cout << '\n' << "Continue(y/n)?: ";
 		std::cin >> goon;
+		std::cout << '\n';
 
 		k++;
 
