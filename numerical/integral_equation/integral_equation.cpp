@@ -31,29 +31,6 @@ double get_w(double x)
 	return 2 / ((1 - pow(x, 2)) * pow((15 * pow(x, 2) - 3) / 2, 2));
 }
 
-std::vector<double> ksi_init(int n, double h, int N, double a, std::vector<double> x)
-{
-	std::vector<double> vec;
-	double b = h;
-
-	int j = 0;
-	for (auto i = 0; i < n * N; i++)
-	{
-		vec.push_back(get_ksi(a, b, x.at(j)));
-		
-		if ((i + 1) % n == 0)
-		{
-			a += h; b += h;
-		}
-
-		j++;
-		if (j == n)
-			j = 0;
-	}
-
-	return vec;
-}
-
 std::vector<double> operator * (double** matr, std::vector<double> vec)
 {
 	std::vector<double> res(vec.size());
@@ -69,14 +46,14 @@ std::vector<double> operator * (double** matr, std::vector<double> vec)
 	return res;
 }
 
-std::tuple<double**, std::vector<double>> init(int n, double h, int N, double a, std::vector<double> x)
+std::tuple<std::vector<double>, double**, std::vector<double>> init(int n, double h, int N, double a, std::vector<double> x)
 {
 	int size = n * N, k = 0, l = 0;
 	double c = h / 2, ksi_i, ksi_j;
 
 	double a_i = a, a_j = a, b_i = h, b_j = h;
 
-	std::vector<double> free_members;
+	std::vector<double> ksi, free_members;
 
 	double** matrix = new double* [size];
 	for (auto i = 0; i < size; i++)
@@ -103,6 +80,7 @@ std::tuple<double**, std::vector<double>> init(int n, double h, int N, double a,
 			}
 		}
 
+		ksi.push_back(ksi_i);
 		free_members.push_back(f(ksi_i));
 
 		k++;
@@ -114,7 +92,7 @@ std::tuple<double**, std::vector<double>> init(int n, double h, int N, double a,
 		}
 	}
 
-	return std::make_tuple(matrix, free_members);
+	return std::make_tuple(ksi, matrix, free_members);
 }
 
 std::vector<double> Gauss(double** A, std::vector<double> b)
@@ -190,7 +168,7 @@ int main()
 {
 	int k = 0;
 	const double a = 0, b = M_PI;
-	const int n = 3, accuracy_degree = 2 * n - 1;
+	const int n = 3, ratio = pow(1 << n, 2);
 
 	double h = (b - a), error, prev_error;
 
@@ -204,12 +182,10 @@ int main()
 		std::cout << "N = " << N << '\n';
 		std::cout << "Size = " << n * N << '\n';
 
-		std::vector<double> ksi = ksi_init(n, h, N, a, x);
-
 		double** A;
-		std::vector<double> c;
+		std::vector<double> ksi, c;
 
-		std::tie(A, c) = init(n, h, N, a, x);
+		std::tie(ksi, A, c) = init(n, h, N, a, x);
 
 		/*for (auto i = 0; i < n * N; i++)
 		{
@@ -232,8 +208,16 @@ int main()
 		std::cout << '\n' << error << '\n' << '\n';
 
 		if (k != 0)
-			std::cout << "Expected error ratio: " << 64 << '\n' << std::setprecision(10)
+			std::cout << "Expected error ratio: " << ratio << '\n' << std::setprecision(10)
 			<< "Actual error ratio: " << prev_error / error << '\n' << '\n';
+
+		for (auto i = 0; i < n * N; i++)
+			delete[] A[i];
+		delete[] A;
+
+		std::vector<double>().swap(ksi);
+		std::vector<double>().swap(c);
+		std::vector<double>().swap(u_appr);
 
 		std::cout << '\n' << "Continue(y/n)?: ";
 		std::cin >> goon;
