@@ -11,16 +11,72 @@ int sign(double x)
 	return x < 0 ? -1 : 1;
 }
 
-double sum(vector x)
+typedef std::vector<double> vector;
+typedef std::vector<std::vector<double>> matrix;
+
+vector operator* (double multiplier, vector vec)
+{
+	vector new_vector = vec;
+	for (auto i = new_vector.begin(); i != new_vector.end(); i++)
+		*i *= multiplier;
+	return new_vector;
+}
+
+vector operator/ (vector vec, double divider)
+{
+	vector new_vector = vec;
+	for (auto i = new_vector.begin(); i != new_vector.end(); i++)
+		*i /= divider;
+	return new_vector;
+}
+
+vector operator+ (vector a, vector b)
+{
+	vector c;
+	for (auto i = 0; i < a.size(); i++)
+		c.push_back(a.at(i) + b.at(i));
+	return c;
+}
+
+vector operator- (vector a, vector b)
+{
+	vector c;
+	for (auto i = 0; i < a.size(); i++)
+		c.push_back(a.at(i) - b.at(i));
+	return c;
+}
+
+vector operator * (matrix matr, vector vec)
+{
+	std::vector<double> res(vec.size());
+	for (auto i = 0; i < vec.size(); i++)
+	{
+		res.at(i) = 0;
+
+		for (auto j = 0; j < vec.size(); j++)
+			res.at(i) += matr[i][j] * vec.at(j);
+	}
+	return res;
+}
+
+matrix operator *(matrix A, matrix B)
+{
+	matrix C(A.size(), vector(A.size(), 0));
+	for (auto i = 0; i < A.size(); i++)
+		for (auto j = 0; j < A.size(); j++)
+			for (auto k = 0; k < A.size(); k++)
+				C[i][j] += A[i][k] * B[k][j];
+
+	return C;
+}
+
+double norm(vector x)
 {
 	double sum = 0;
 	for (auto i = 0; i < x.size(); i++)
-		sum += x.at(i);
-	return sum
+		sum += fabs(x.at(i) * x.at(i));
+	return sqrt(sum);
 }
-
-typedef std::vector<double> vector;
-typedef std::vector<std::vector<double>> matrix;
 
 double K(double x, double t)
 {
@@ -45,32 +101,6 @@ double get_ksi(double a, double b, double x)
 double get_w(double x)
 {
 	return 2 / ((1 - pow(x, 2)) * pow((15 * pow(x, 2) - 3) / 2, 2));
-}
-
-vector operator * (matrix matr, vector vec)
-{
-	std::vector<double> res(vec.size());
-
-	for (auto i = 0; i < vec.size(); i++)
-	{
-		res.at(i) = 0;
-
-		for (auto j = 0; j < vec.size(); j++)
-			res.at(i) += matr[i][j] * vec.at(j);
-	}
-
-	return res;
-}
-
-matrix operator *(matrix A, matrix B)
-{
-	matrix C(A.size(), vector(A.size(), 0));
-	for (auto i = 0; i < A.size(); i++)
-		for (auto j = 0; j < A.size(); j++)
-			for (auto k = 0; k < A.size(); k++)
-				C[i][j] += A[i][k] * B[k][j];
-
-	return C;
 }
 
 std::tuple<vector, matrix, vector> init(int n, double h, int N, double a, vector x)
@@ -189,97 +219,71 @@ vector Gauss(matrix A, vector b)
 	return x;
 }
 
-std::tuple<matrix, matrix> QR(matrix A)
+vector Householder(matrix A, vector b)
 {
-	matrix Q, R = A, Z = A, minor(A.size(), vector(A.size(), 0));
+	int size = A.size();
 
-	std::vector<matrix> H;
-
-	for (auto k = 0; k < A.size() - 1; k++)
+	for (auto k = 0; k < size - 1; k++)
 	{
-		for (int i = 0; i < k; i++)
-			minor[i][i] = 1.;
-		for (int i = k; i < A.size(); i++)
-			for (int j = k; j < A.size(); j++)
-				minor[i][j] = Z[i][j];
+		double tmp_sum_y = 0, tmp_sum_e = 0;
+		vector y, e;
 
-		double tmp_sum = 0;
-		vector x, e;
-		for (auto i = 0; i < A.size(); i++)
+		for (auto i = k; i < size; i++)
 		{
-			x.push_back(A[i][k]);
+			y.push_back(A[i][k]);
 			e.push_back((i == k) ? 1 : 0);
 
-			tmp_sum += x.at(i) * x.at(i);
+			tmp_sum_y += fabs(y.at(i - k) * y.at(i - k));
+			tmp_sum_e += fabs(e.at(i - k) * e.at(i - k));
 		}
-		double a = sqrt(tmp_sum);
-		if (A[k][k] > 0)
-			a = -a;
 
-		tmp_sum = 0;
-		for (auto i = 0; i < A.size(); i++)
+		double a = sqrt(tmp_sum_y) / sqrt(tmp_sum_e);
+
+		vector w = y - sign(y.at(0)) * a * e;
+
+		double w_norm = norm(w);
+
+		matrix H(size, vector(size, 0));
+
+		for (auto i = 0; i < size; i++)
 		{
-			e.at(i) = x.at(i) + a * e.at(i);
-			tmp_sum += e.at(i) * e.at(i);
+			if (i < k)
+			{
+				for (auto j = 0; j < size; j++)
+				{
+					if (i == j)
+						H[i][i] = 1;
+					else
+						H[i][j] = 0;
+				}
+			}
+			else
+			{
+				for (auto j = 0; j < size; j++)
+				{
+					if (j < k)
+						H[i][j] = 0;
+					else
+					{
+						H[i][j] = (-2 / (w_norm * w_norm)) * w.at(i - k) * w.at(j - k);
+						if (i == j)
+							H[i][i] += 1;
+					}
+				}
+			}
 		}
-		double e_norm = sqrt(tmp_sum);
 
-		for (auto i = 0; i < A.size(); i++)
-			e.at(i) /= e_norm;
-
-		matrix Hk(A.size(), vector(A.size(), 0));
-
-		for (int i = 0; i < A.size(); i++)
-			for (int j = 0; j < A.size(); j++)
-				Hk[i][j] = -2 * e.at(i) * e.at(j);
-		for (int i = 0; i < A.size(); i++)
-			Hk[i][i] += 1;
-
-		H.push_back(Hk);
-
-		Z = H.at(k) * minor;
+		A = H * A;
+		b = H * b;
 	}
 
-	Q = H.at(0);
-	for (auto i = 1; i < A.size() - 1; i++)
-	{
-		minor = H.at(i) * Q;
-		Q = minor;
-	}
-
-	R = Q * A;
-	for (auto i = 0; i < Q.size(); i++)
-		for (auto j = 0; j < i; j++)
-		{
-			double t = Q[i][j];
-			Q[i][j] = Q[j][i];
-			Q[j][i] = t;
-		}
-
-	return std::make_tuple(Q, R);
-}
-
-vector solvebyQR(matrix A, vector b)
-{
-	matrix Q, R;
-	std::tie(Q, R) = QR(A);
-	
-	for (auto i = 0; i < Q.size(); i++)
-		for (auto j = 0; j < i; j++)
-		{
-			double t = Q[i][j];
-			Q[i][j] = Q[j][i];
-			Q[j][i] = t;
-		}
-
-	std::vector<double> x(A.size()), y = Q * b;
-
+	vector x(size);
 	double sum = 0;
-	for (int i = A.size() - 1; i >= 0; i--)
+	for (auto i = size - 1; i >= 0; i--)
 	{
-		for (auto k = i + 1; k < A.size(); k++)
-			sum += x.at(k) * (R[i][k] / R[i][i]);
-		x.at(i) = y.at(i) / R[i][i] - sum;
+		for (auto k = i + 1; k < size; k++)
+			sum += x.at(k) * (A[i][k] / A[i][i]);
+		x.at(i) = b.at(i) / A[i][i] - sum;
 		sum = 0;
 	}
 
@@ -309,16 +313,9 @@ int main()
 
 		std::tie(ksi, A, c) = init(n, h, N, a, x);
 
-		/*for (auto i = 0; i < n * N; i++)
-		{
-			for (auto j = 0; j < n * N; j++)
-				std::cout << A[i][j] << "   ";
-			std::cout << '\n';
-		}*/
-
 		//try {
 			//u_appr = Gauss(A, c);
-			u_appr = solvebyQR(A, c);
+			u_appr = Householder(A, c);
 		/*}
 		catch (std::exception) {
 			std::cout << "Gauss says max is 0" << '\n';
@@ -328,7 +325,7 @@ int main()
 
 		for (auto i = 0; i < n * N; i++)
 			u_real.push_back(ksi.at(i));
-
+		
 		for (auto i = 0; i < n * N; i++)
 			std::cout << u(ksi.at(i)) << "  ~  " << u_appr.at(i) <<'\n';
 
