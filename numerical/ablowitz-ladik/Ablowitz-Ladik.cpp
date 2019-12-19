@@ -105,10 +105,13 @@ std::vector<cvector> operator>> (std::vector<cvector> v, cvector element)
 
 matrix operator *(std::complex<double> b, matrix A)
 {
-	matrix C(A.size());
+	matrix C(A.size(), cvector(A.size(), 0));
 	for (auto i = 0; i < C.size(); i++)
 		for (auto j = 0; j < C.size(); j++)
+		{
+			C[i][j] = A[i][j];
 			C[i][j] *= b;
+		}
 	return C;
 }
 
@@ -133,7 +136,7 @@ matrix operator *(matrix A, matrix B)
 
 double q(double t)
 {
-	return pow(sin((1 / 2) * t), 3) + 1;
+	return pow(sin((1. / 2.) * t), 3) + 1.;
 }
 
 cvector F(double t, std::complex<double> zeta, cvector v)
@@ -143,7 +146,7 @@ cvector F(double t, std::complex<double> zeta, cvector v)
 	cvector res;
 
 	res.push_back(q(t) * v.at(1) - 1i * zeta * v.at(0));
-	res.push_back(-1 * q(t) * v.at(0) + 1i * zeta * v.at(1));
+	res.push_back(-1. * q(t) * v.at(0) + 1i * zeta * v.at(1));
 
 	return res;
 }
@@ -269,21 +272,31 @@ cvector AL(double eps, double T1, double T2, double M, std::complex<double> zeta
 
 		matrix tmp = { row1,row2 };
 
-		Tau.push_back((1 / sqrt(1 + pow(eps, 2) * fabs(q(T1 + m * eps)))) * tmp);
+		Tau.push_back((1. / sqrt(1 + pow(eps, 2) * fabs(q(T1 + m * eps)))) * tmp);
+
+		matrix().swap(tmp);
 	}
 
-	diag D = { pow(M_E, 1i * zeta * (T2 + 0.5 * eps)), pow(M_E, -1i * zeta * (T2 + 0.5 * eps)) };
-	matrix mult = D * Tau.at(M);
+	std::cout << Tau.size() << '\n' << '\n';
 
-	for (auto m = M - 1; m >= 0; m--)
+	matrix diag = { cvector{pow(M_E, 1i * zeta * (T2 + 0.5 * eps)), 0}, cvector{0, pow(M_E, -1i * zeta * (T2 + 0.5 * eps))} };
+
+	matrix mult = diag * Tau.at(M - 1);
+
+	for (auto m = M - 2; m >= 0; m--)
 		mult = mult * Tau.at(m);
 
 	mult = pow(M_E, -1i * zeta * (T1 - 0.5 * eps)) * mult;
 	for (auto i = 0; i < mult.size(); i++) {
+		std::cout << std::setw(20);
 		for (auto j = 0; j < mult.size(); j++)
-			std::cout << mult[i][j] << "  ";
+			std::cout << mult[i][j];
 		std::cout << '\n';
 	}
+
+	matrix().swap(diag);
+	matrix().swap(mult);
+	std::vector<matrix>().swap(Tau);
 
 	return cvector(0);
 }
@@ -292,46 +305,29 @@ int main()
 {
 	int k = 3;
 
-	int M = 10;
-	double T1 = 0, T2 = M_PI;
-	double eps = (T2 - T1) / M;
+	double M = 5.;
+	double T1 = 0., T2 = 2 * M_PI;
 
-	double xi = 0.5, eta = 0.5;
+	double xi = 0.5;
+	double eta = 0.5;
 	std::complex<double> zeta = { xi, eta };
 
 	double min_error, errorImAdams, prev_errorImAdams;
 
-	std::string goon = "n";
+	std::string goon = "y";
 
 	cvector f0 = { 0, 2, 1 };
 	std::vector<cvector> approximation_by_RK3, approximation_by_ImAdams;
 
-	std::cout << "Initial values: t = " << T1 << '\n'
-		<< "x(t) = " << f0.at(0) << '\n'
-		<< "y(t) = " << f0.at(1) << '\n'
-		<< "z(t) = " << f0.at(2) << '\n' << '\n';
-
-	cvector fake = AL(eps, T1, T2, M, zeta);
-
 	while (goon == "y")
 	{
 		double eps = (T2 - T1) / M;
+		cvector fake = AL(eps, T1, T2, M, zeta);
+		
+		std::cout << '\n' << "Continue(y/n)?: ";
+		std::cin >> goon;
 
-		std::cout << "eps = " << eps << '\n'
-			<< "Number of nodes = " << M << '\n' << '\n';
-
-		approximation_by_ImAdams = ImplicitAdamsPC(M, xi, k, T1, T2, f0);
-
-		std::cout << std::setprecision(5);
-
-		for (auto i = approximation_by_ImAdams.begin(); i != approximation_by_ImAdams.end(); i++)
-		{
-			/*std::cout << "t = " << j << '\n'
-				<< "x(t) = " << x(j, C) << "   ~x(t) = " << i->at(0) << "   x(t) - ~x(t) = " << x(j, C) - i->at(0) << '\n'
-				<< "y(t) = " << y(j, C) << "   ~y(t) = " << i->at(1) << "   y(t) - ~y(t) = " << y(j, C) - i->at(1) << '\n'
-				<< "z(t) = " << z(j, C) << "   ~z(t) = " << i->at(2) << "   z(t) - ~z(t) = " << z(j, C) - i->at(2) << '\n' << '\n';
-			*/
-		}
+		M *= 2;
 	}
 
 	return 0;
