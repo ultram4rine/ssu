@@ -9,7 +9,7 @@ double f1(array<double, 2> x)
     return pow((pow(x1, 2) + pow(x2, 2) - 1), 2) + pow((0.75 * pow(x1, 3) - 0.9 * pow(x2, 2) - 1), 2);
 }
 
-// функция Розенброка.
+// функция Розенброка, глобальный минимум 0 в точке (1, 1).
 double f2(array<double, 2> x)
 {
     double x1 = x[0];
@@ -22,4 +22,11 @@ double f3(array<double, 2> x)
     double x1 = x[0];
     double x2 = x[1];
     return pow(x1 - 1, 2) + pow(x2 - 1, 2) - x1 * x2;
+}
+
+double f4(array<double, 2> x)
+{
+    double x1 = x[0];
+    double x2 = x[1];
+    return pow(x1, 2) / 4 + pow(x2, 2) / 32;
 }

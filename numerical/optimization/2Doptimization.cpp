@@ -24,11 +24,11 @@ array<double, 2> coordinate_descent(array<double, 2> x_0, double eps, twoDFunc f
         }
         f_k = f_k1;
         f_k1 = f(x_k);
-        cout << "f0: " << f_k << '\n';
-        cout << "f1: " << f_k1 << '\n' << '\n';
-        n++;
-    } while (fabs(f_k1 - f_k) > eps && n < 80);
 
+        n++;
+    } while (fabs(f_k1 - f_k) > eps && n < 10000);
+
+    cout << "Coordinate Descent Method" << '\n';
     cout << "iterations: " << n << '\n' << '\n';
 
     return x_k;
@@ -68,10 +68,6 @@ array<double, 2> rosenbrock(array<double, 2> x_0, double eps, twoDFunc f)
         x_k[1] -= h * p1[1];
         f_k = f(x_k);
 
-        cout << "first coordinate" << '\n';
-        cout << "f0: " << f_k << '\n';
-        cout << "f1: " << f_k1 << '\n' << '\n';
-
         if (f_k1 < f_k)
             h *= a;
         else if (f_k1 > f_k)
@@ -82,7 +78,7 @@ array<double, 2> rosenbrock(array<double, 2> x_0, double eps, twoDFunc f)
         x_k[1] += h * p1[1];
         f_k1 = f(x_k);
 
-        // восстанавливаем h а то он может слишком дохера шагнуть.
+        // восстанавливаем h, а то он может слишком сильно шагнуть.
         h = h0;
 
         // повторяем процесс для второй координаты.
@@ -95,10 +91,6 @@ array<double, 2> rosenbrock(array<double, 2> x_0, double eps, twoDFunc f)
         x_k[0] -= h * p2[0];
         x_k[1] -= h * p2[1];
         f_k = f(x_k);
-
-        cout << "second coordinate" << '\n';
-        cout << "f0: " << f_k << '\n';
-        cout << "f1: " << f_k1 << '\n' << '\n';
 
         if (f_k1 < f_k)
             h *= a;
@@ -117,8 +109,9 @@ array<double, 2> rosenbrock(array<double, 2> x_0, double eps, twoDFunc f)
         p2[1] = p1[0];
 
         n++;
-    } while (fabs(f_k1 - f_k) > eps && n < 80);
+    } while (fabs(f_k1 - f_k) > eps);
 
+    cout << "Rosenbrock Method" << '\n';
     cout << "iterations: " << n << '\n' << '\n';
 
     return x_k;
