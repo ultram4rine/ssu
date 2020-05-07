@@ -80,7 +80,6 @@ int main()
             if (j == 0)
             {
                 row.push_back(initial_condition(h * i));
-                //std::cout << h*i << ":" << initial_condition(h * i) << '\n';
             }
             else
             {
