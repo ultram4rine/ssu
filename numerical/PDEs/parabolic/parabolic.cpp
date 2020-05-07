@@ -5,7 +5,6 @@
 #include <cmath>
 #include <vector>
 
-
 double initial_condition(double x)
 {
     return (1.1 * x * x + 2.1) * pow(M_E, -x);
@@ -69,12 +68,14 @@ int main()
     }
     std::cout << '\n';
 
-    std::cout << "| ";
-    // fill table with initial and boundary values.
+    // count and fill table.
     for (auto j = 0; j <= t_size; j++)
     {
+        std::cout << "| ";
         std::vector<double> row;
-        for (auto i = 0; i <= x_size; i++)
+        row.push_back(boundary_start);
+        std::cout << std::left << std::setw(8) << row.at(0) << " | ";
+        for (auto i = 1; i < x_size; i++)
         {
             if (j == 0)
             {
@@ -83,39 +84,14 @@ int main()
             }
             else
             {
-                row.push_back(0);
+                row.push_back(sigma * table.at(j - 1).at(i + 1) - table.at(j - 1).at(i) * (2 * sigma - 1) + sigma * table.at(j - 1).at(i - 1));
             }
-            if (i == 0)
-            {
-                row.at(i) = boundary_start;
-            }
-            else if (i == x_size)
-            {
-                row.at(i) = boundary_end;
-            }
-            if (j == 0)
-                std::cout << std::left << std::setw(8) << row.at(i) << " | ";
-        }
-        table.push_back(row);
-    }
-    std::cout << '\n';
-
-    // count.
-    for (auto j = 1; j <= t_size; j++)
-    {
-        std::cout << "| ";
-        std::vector<double> row;
-        row.push_back(boundary_start);
-        std::cout << std::left << std::setw(8) << row.at(0) << " | ";
-        for (auto i = 1; i < x_size; i++)
-        {
-            row.push_back(sigma * table.at(j - 1).at(i + 1) - table.at(j - 1).at(i) * (2 * sigma - 1) + sigma * table.at(j - 1).at(i - 1));
-            
             std::cout << std::left << std::setw(8) << row.at(i) << " | ";
         }
         row.push_back(boundary_end);
         std::cout << std::left << std::setw(8) << row.at(x_size) << " | ";
-        table.at(j) = row;
         std::cout << '\n';
+        table.push_back(row);
     }
+    std::cout << '\n';
 }
