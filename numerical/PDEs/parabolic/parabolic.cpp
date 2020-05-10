@@ -1,6 +1,7 @@
 ﻿#define _USE_MATH_DEFINES
 
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <cmath>
 #include <vector>
@@ -23,8 +24,8 @@ int main()
 
     const double a = 1.;
 
-    const double h = .125;
-    const double l = .00125;
+    const double h = .0625;
+    const double l = .000625;
 
     const double sigma = (a * a * l) / (h * h);
     std::cout << sigma << '\n';
@@ -68,29 +69,39 @@ int main()
     }
     std::cout << '\n';
 
-    // count and fill table.
+    std::ofstream csv;
+    csv.open("parabolic.csv");
+    csv << "# X Y Z\n";
+
+    // count and fill table and csv file.
     for (auto j = 0; j <= t_size; j++)
     {
         std::cout << "| ";
         std::vector<double> row;
         row.push_back(boundary_start);
         std::cout << std::left << std::setw(8) << row.at(0) << " | ";
+        csv << 0 << "," << l * j << "," << row.at(0) << "\n";
         for (auto i = 1; i < x_size; i++)
         {
             if (j == 0)
             {
                 row.push_back(initial_condition(h * i));
+                //std::cout << h*i << ":" << initial_condition(h * i) << '\n';
             }
             else
             {
                 row.push_back(sigma * table.at(j - 1).at(i + 1) - table.at(j - 1).at(i) * (2 * sigma - 1) + sigma * table.at(j - 1).at(i - 1));
             }
             std::cout << std::left << std::setw(8) << row.at(i) << " | ";
+            csv << h * i << "," << l * j << "," << row.at(i) << "\n";
         }
         row.push_back(boundary_end);
         std::cout << std::left << std::setw(8) << row.at(x_size) << " | ";
+        csv << h * x_size << "," << l * j << "," << row.at(x_size) << "\n";
         std::cout << '\n';
         table.push_back(row);
     }
     std::cout << '\n';
+
+    csv.close();
 }

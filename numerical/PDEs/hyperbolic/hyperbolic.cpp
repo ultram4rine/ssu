@@ -1,20 +1,10 @@
 ﻿#define _USE_MATH_DEFINES
 
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <cmath>
 #include <vector>
-
-/*double u(double a, double x_end, double k, double l, double x, double t)
-{
-    //double A = (2 * k * sin((M_PI * k) / l) * l * l) / (M_PI * l * l - M_PI * k * k);
-    //double B = 2 * M_PI / k * (-((M_PI * pow(l, 4) - M_PI * k * pow(l, 3) - M_PI * k * k * l * l + M_PI * pow(k, 3) * l) * sin((M_PI * l + M_PI * k) / l) + (pow(l, 4) - 2 * k * pow(l, 3) + k * k * l * l) * cos((M_PI * l + M_PI * k) / l) + (-M_PI * pow(l, 4) - M_PI * k * pow(l, 3) + M_PI * k * k * l * l + M_PI * pow(k, 3) * l) * sin((M_PI * l - M_PI * k) / l) + (-pow(l, 4) - 2 * k * pow(l, 3) - k * k * l * l) * cos((M_PI * l - M_PI * k) / l)) / (2 * M_PI * M_PI * pow(l, 4) - 4 * M_PI * M_PI * k * k * l * l + 2 * M_PI * M_PI * pow(k, 4)) - (2 * k * pow(l, 3)) / (M_PI * M_PI * pow(l, 4) - 2 * M_PI * M_PI * k * k * l * l + M_PI * M_PI * pow(k, 4)));
-    
-    double A = 16 / (3 * M_PI);
-    double B = 4 * (4 / (3 * M_PI) - 9 / (9 * M_PI * M_PI)) / M_PI;
-
-    return (A * cos(M_PI) * a * t + B * sin(M_PI) * a * t) * sin(M_PI) * x;
-}*/
 
 double initial_u(double k, double l, double x)
 {
@@ -43,8 +33,8 @@ int main()
 
     const double a = 1.;
 
-    const double h = .125;
-    const double l = .025;
+    const double h = .0625;
+    const double l = .0125;
 
     const double alpha = (a * l) / h;
     std::cout << alpha << '\n';
@@ -88,12 +78,17 @@ int main()
     }
     std::cout << '\n';
 
+    std::ofstream csv;
+    csv.open("hyperbolic.csv");
+    csv << "# X Y Z\n";
+
     // count and fill table.
     for (auto j = 0; j <= t_size; j++)
     {
         std::cout << "| ";
         std::vector<double> row;
         row.push_back(boundary_start);
+        csv << 0 << "," << l * j << "," << row.at(0) << "\n";
         std::cout << std::left << std::setw(13) << row.at(0) << " | ";
         for (auto i = 1; i < x_size; i++)
         {
@@ -110,9 +105,11 @@ int main()
                 row.push_back(alpha * alpha * table.at(j - 1).at(i + 1) - 2 * table.at(j - 1).at(i) * (alpha * alpha - 1) + alpha * alpha * table.at(j - 1).at(i - 1) - table.at(j - 2).at(i));
             }
             std::cout << std::left << std::setw(13) << row.at(i) << " | ";
+            csv << h * i << "," << l * j << "," << row.at(i) << "\n";
         }
         row.push_back(boundary_end);
         std::cout << std::left << std::setw(13) << row.at(x_size) << " | ";
+        csv << h * x_size << "," << l * j << "," << row.at(x_size) << "\n";
         std::cout << '\n';
         table.push_back(row);
     }
@@ -125,9 +122,5 @@ int main()
     }
     std::cout << '\n';
 
-    /*std::cout << "| ";
-    for (auto i = 0; i <= x_size; i++)
-    {
-        std::cout << std::left << std::setw(13) << u(a, x_end, init_k, init_l, h * i, t_end) << " | ";
-    }*/
+    csv.close();
 }
