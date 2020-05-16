@@ -34,8 +34,8 @@ int main()
     const double y_start = 0.;
     const double y_end = 1.;
 
-    const double h = .25;
-    const double l = .25;
+    const double h = .125;
+    const double l = .125;
 
     int x_size = fabs(x_end - x_start) / h;
     int y_size = fabs(y_end - y_start) / l;
@@ -74,6 +74,7 @@ int main()
             std::cout << std::left << std::setw(8) << row.at(i) << " | ";
             csv_start << h * i << "," << l * (y_size - j) << "," << row.at(i) << "\n";
         }
+        csv_start << '\n';
         std::cout << '\n';
         grid.push_back(row);
     }
@@ -109,6 +110,7 @@ int main()
             std::cout << std::left << std::setw(8) << grid.at(j).at(i) << " | ";
             csv_end << h * i << "," << l * j << "," << grid.at(j).at(i) << "\n";
         }
+        csv_end << '\n';
         std::cout << '\n';
     }
     std::cout << '\n';

@@ -6,6 +6,11 @@
 #include <cmath>
 #include <vector>
 
+double u(double x, double t)
+{
+    return (cos(M_PI * t) + 1 / (2 * M_PI) * sin(M_PI * t)) * sin(M_PI * x);
+}
+
 double initial_u(double k, double l, double x)
 {
     return k * sin((k * M_PI * x) / l);
@@ -22,8 +27,8 @@ int main()
     const double boundary_end = 0;
 
     // variables for initial functions.
-    const double init_k = 2;
-    const double init_l = 4;
+    const double init_k = 1;
+    const double init_l = 1;
 
     const double x_start = 0.;
     const double x_end = 1.;
@@ -33,8 +38,8 @@ int main()
 
     const double a = 1.;
 
-    const double h = .0625;
-    const double l = .0125;
+    const double h = .125;
+    const double l = .025;
 
     const double alpha = (a * l) / h;
     std::cout << alpha << '\n';
@@ -109,10 +114,16 @@ int main()
         }
         row.push_back(boundary_end);
         std::cout << std::left << std::setw(13) << row.at(x_size) << " | ";
-        csv << h * x_size << "," << l * j << "," << row.at(x_size) << "\n";
+        csv << h * x_size << "," << l * j << "," << row.at(x_size) << '\n' << '\n';
         std::cout << '\n';
         table.push_back(row);
     }
+
+    std::cout << "| ";
+    for (auto i = 0; i <= x_size; i++)
+        std::cout << std::left << std::setw(13) << u(h * i, t_end) << " | ";
+    std::cout << '\n';
+
     for (auto i = 0; i < 17.5 * x_size; i++)
     {
         char symbol = '-';

@@ -97,7 +97,7 @@ int main()
         }
         row.push_back(boundary_end);
         std::cout << std::left << std::setw(8) << row.at(x_size) << " | ";
-        csv << h * x_size << "," << l * j << "," << row.at(x_size) << "\n";
+        csv << h * x_size << "," << l * j << "," << row.at(x_size) << '\n' << '\n';
         std::cout << '\n';
         table.push_back(row);
     }
