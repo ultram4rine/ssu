@@ -21,12 +21,5 @@ double f3(array<double, 2> x)
 {
     double x1 = x[0];
     double x2 = x[1];
-    return pow(x1 - 1, 2) + pow(x2 - 1, 2) - x1 * x2;
-}
-
-double f4(array<double, 2> x)
-{
-    double x1 = x[0];
-    double x2 = x[1];
-    return pow(x1, 2) / 4 + pow(x2, 2) / 32;
+    return pow(pow(x1, 2) + x2 - 11, 2) + pow(x1 + pow(x2, 2) - 7, 2);
 }
