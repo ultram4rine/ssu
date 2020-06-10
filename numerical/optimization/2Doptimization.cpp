@@ -38,78 +38,59 @@ array<double, 2> coordinate_descent(array<double, 2> x_0, double eps, twoDFunc f
 array<double, 2> rosenbrock(array<double, 2> x_0, double eps, twoDFunc f)
 {
     // параметры метода.
-    double h0 = 0.5, h = h0;
-    double a = 3, b = -0.5;
+    double h0 = 0.5;
+    array<double, 2> h = { h0, h0 };
+    double a = 3.0, b = -0.5;
 
     // счетчик шагов.
     int n = 0;
 
     // направления осей.
-    array<double, 2> p1 = { 1,0 }, p2 = { 0,1 };
+    array<double, 2> p1 = { 1.0, 0.0 }, p2 = { 0.0, 1.0 };
+    array<array<double, 2>, 2> p = { p1, p2 };
 
-    double f_k = f(x_0);
+    double f_k = 0;
+    double f_k1 = 0;
 
+    array<double, 2> x_t = x_0;
     array<double, 2> x_k = x_0;
-    double f_k1 = f(x_k);
+    array<double, 2> x_k1 = x_0;
 
     do
     {
-        x_0 = x_k;
+        x_k = x_k1;
+        x_t = x_k1;
 
-        // пробный шаг по первой координате.
-        x_k[0] += h * p1[0];
-        x_k[1] += h * p1[1];
+        for (auto i = 0; i < 2; i++)
+        {
+            x_t[0] += h[i] * p[i][0];
+            x_t[1] += h[i] * p[i][1];
 
-        f_k = f_k1;
-        f_k1 = f(x_k);
+            f_k = f(x_k1);
+            f_k1 = f(x_t);
 
-        // вернулись.
-        x_k[0] -= h * p1[0];
-        x_k[1] -= h * p1[1];
-        f_k = f(x_k);
+            if (f_k1 < f_k)
+                h[i] *= a;
+            else if (f_k1 > f_k)
+                h[i] *= b;
 
-        if (f_k1 < f_k)
-            h *= a;
-        else if (f_k1 > f_k)
-            h *= b;
+            x_k1[0] += h[i] * p[i][0];
+            x_k1[1] += h[i] * p[i][1];
 
-        // шагнули.
-        x_k[0] += h * p1[0];
-        x_k[1] += h * p1[1];
-        f_k1 = f(x_k);
+            h[i] = h0;
+        }
 
-        // восстанавливаем h, а то он может слишком сильно шагнуть.
-        h = h0;
-
-        // повторяем процесс для второй координаты.
-        x_k[0] += h * p2[0];
-        x_k[1] += h * p2[1];
-
-        f_k = f_k1;
-        f_k1 = f(x_k);
-
-        x_k[0] -= h * p2[0];
-        x_k[1] -= h * p2[1];
-        f_k = f(x_k);
-
-        if (f_k1 < f_k)
-            h *= a;
-        else if (f_k1 > f_k)
-            h *= b;
-
-        x_k[0] += h * p2[0];
-        x_k[1] += h * p2[1];
-        f_k1 = f(x_k);
+        f_k1 = f(x_k1);
 
         // строим новую систему координат.
-        p1[0] = x_k[0] - x_0[0];
-        p1[1] = x_k[1] - x_0[1];
+        p[0][0] = x_k1[0] - x_k[0];
+        p[0][1] = x_k1[1] - x_k[1];
 
-        p2[0] = -p1[1];
-        p2[1] = p1[0];
+        p[1][0] = -p[0][1];
+        p[1][1] = p[0][0];
 
         n++;
-    } while (fabs(f_k1 - f_k) > eps);
+    } while (fabs(f_k1 - f_k) > eps && n < 10000);
 
     cout << "Rosenbrock Method" << '\n';
     cout << "iterations: " << n << '\n' << '\n';
