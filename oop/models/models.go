@@ -14,6 +14,8 @@ type Product struct {
 	Cost int    `xml:"cost" db:"cost"`
 }
 
+type Products []Product
+
 // Print func printing product to console.
 func (p Product) Print() {
 	fmt.Printf("ID: %d\nName: %s\nCost: %d", p.ID, p.Name, p.Cost)
@@ -76,7 +78,7 @@ func (c Customer) ToXML(filepath string) error {
 // Contract struct describes a contract between pawnshop and customer.
 type Contract struct {
 	ID            int       `xml:"id" db:"id"`
-	CustomerID    int       `xml:"customerID" db:"cutomer_id"`
+	CustomerID    int       `xml:"customerID" db:"customer_id"`
 	Products      []Product `xml:"products"`
 	ReturnDate    time.Time `xml:"returnDate" db:"return_date"`
 	FactualReturn time.Time `xml:"factualReturn" db:"factual_return_date"`

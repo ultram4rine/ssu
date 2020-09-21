@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/ultram4rine/ssu/oop/models"
 
@@ -42,4 +43,20 @@ func main() {
 	if err := silverRing.ToXML("products.xml"); err != nil {
 		log.Fatalf("Failed to encode %s product to XML: %s", silverRing.Name, err)
 	}
+
+	var ps models.Products
+	ps = append(ps, goldRing, silverRing)
+
+	var c = models.Contract{
+		ID:            1,
+		CustomerID:    0,
+		Products:      ps,
+		ReturnDate:    time.Now().Add(24 * time.Hour),
+		FactualReturn: time.Now().Add(12 * time.Hour),
+		StartCost:     100,
+		BuybackCost:   200,
+		Closed:        true,
+	}
+
+	c.ToXML("contract.xml")
 }
