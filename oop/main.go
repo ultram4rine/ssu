@@ -37,15 +37,11 @@ func main() {
 		}
 	)
 
-	if err := goldRing.ToXML("products.xml"); err != nil {
-		log.Fatalf("Failed to encode %s product to XML: %s", goldRing.Name, err)
-	}
-	if err := silverRing.ToXML("products.xml"); err != nil {
-		log.Fatalf("Failed to encode %s product to XML: %s", silverRing.Name, err)
-	}
-
 	var ps models.Products
 	ps = append(ps, goldRing, silverRing)
+	if err := ps.ToXML("products.xml"); err != nil {
+		log.Fatalf("Failed to decode products to XML: %s", err)
+	}
 
 	var c = models.Contract{
 		ID:            1,
