@@ -1,13 +1,10 @@
-use crate::models::contract::*;
-use crate::models::customer::*;
-use crate::models::product::*;
+mod models;
 
 fn main() {
-    let p = Product {
-        id: 1,
-        name: "Gold Ring".to_string(),
-        cost: 600,
-    };
+    let p = models::product::Product::new(1, "Gold Ring".to_string(), 600);
 
-    println!("{}", p)
+    let cust =
+        models::customer::Customer::new(1, "Some name".to_string(), "89990000000".to_string());
+
+    println!("{}, {}", p.id, cust.id)
 }
