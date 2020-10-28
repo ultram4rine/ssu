@@ -13,3 +13,7 @@ impl Customer {
         }
     }
 }
+
+pub struct CustomersList {
+    pub customers: Vec<Customer>,
+}

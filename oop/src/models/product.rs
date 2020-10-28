@@ -1,3 +1,7 @@
+extern crate serde;
+extern crate serde_xml_rs;
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct Product {
     pub id: u64,
     pub name: String,
@@ -12,4 +16,8 @@ impl Product {
             cost: cost,
         }
     }
+}
+
+pub struct ProductsList {
+    pub products: Vec<Product>,
 }
