@@ -12,21 +12,22 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     chart.configure_mesh().draw()?;
 
-    let colors = [&RED, &GREEN, &BLUE, &YELLOW, &MAGENTA, &CYAN];
+    let colors = vec![&RED, &GREEN, &BLUE, &YELLOW, &MAGENTA, &CYAN];
 
-    for n in 12..13 {
+    for n in 0..11 {
         let i = n % 6;
-        let color = &RED;
+        let color = colors[i as usize];
+        let closure = move |(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], color);
 
         chart
             .draw_series(LineSeries::new(
                 (0..=500000)
                     .map(|x| x as f32 / 500000.0)
                     .map(|x| (x, fi(x, n))),
-                &RED,
+                color,
             ))?
             .label(format!("fi{}(x)", n))
-            .legend(|(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &RED));
+            .legend(closure);
     }
 
     chart
