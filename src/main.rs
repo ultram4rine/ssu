@@ -41,6 +41,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else if draw == 2 {
         // if draw a pack of functions.
         let k = read_i32("Choose number of pack: ");
+        if k < 1 {
+            // k must be >= 1.
+            panic!("k must be >= 1");
+        }
         let mut ns = Vec::new();
         for i in 1..=2_i32.pow(k as u32 - 1) {
             ns.push(2_i32.pow(k as u32) + i);
