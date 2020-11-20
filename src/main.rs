@@ -1,10 +1,14 @@
+// plotting lib.
 use plotters::prelude::*;
+
 use std::io;
 use std::io::Write;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // create graph picture and fill it by white color.
     let root = BitMapBackend::new("graph.png", (640, 480)).into_drawing_area();
     root.fill(&WHITE)?;
+    // create area for graph.
     let mut chart = ChartBuilder::on(&root)
         .caption("Faber-Schauder system", ("sans-serif", 50).into_font())
         .margin(5)
@@ -16,8 +20,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let colors = vec![&RED, &GREEN, &BLUE];
 
+    // choose what to draw.
     let draw = read_i32("Draw a single function(1) or a pack(2)?: ");
     if draw == 1 {
+        // if draw a single func.
         let n = read_i32("Choose number of function: ");
 
         let color = &RED;
@@ -33,6 +39,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .label(format!("fi{}(x)", n))
             .legend(closure);
     } else if draw == 2 {
+        // if draw a pack of functions.
         let k = read_i32("Choose number of pack: ");
         let mut ns = Vec::new();
         for i in 1..=2_i32.pow(k as u32 - 1) {
@@ -64,6 +71,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+// fi is a func of Fabes-Schauder system.
 fn fi(x: f32, n: i32) -> f32 {
     if n == 0 {
         return 1_f32;
@@ -80,6 +88,7 @@ fn fi(x: f32, n: i32) -> f32 {
     }
 }
 
+// count_k_and_i is a helper func for getting k and i from n = 2^k + i.
 fn count_k_and_i(n: i32) -> (f32, f32) {
     let k = (((n - 1) as f32).log2()).floor();
     let i = (n as f32 - 2_f32.powf(k)).round();
