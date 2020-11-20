@@ -1,4 +1,6 @@
 use plotters::prelude::*;
+use std::io;
+use std::io::Write;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let root = BitMapBackend::new("graph.png", (640, 480)).into_drawing_area();
@@ -12,12 +14,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     chart.configure_mesh().draw()?;
 
-    let colors = vec![&RED, &GREEN, &BLUE, &YELLOW, &MAGENTA, &CYAN];
+    let colors = vec![&RED, &GREEN, &BLUE];
 
-    for n in 0..11 {
-        let i = n % 6;
-        let color = colors[i as usize];
-        let closure = move |(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], color);
+    let draw = read_i32("Draw a single function(1) or a pack(2)?: ");
+    if draw == 1 {
+        let n = read_i32("Choose number of function: ");
+
+        let color = &RED;
+        let closure = move |(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], &RED);
 
         chart
             .draw_series(LineSeries::new(
@@ -28,6 +32,27 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             ))?
             .label(format!("fi{}(x)", n))
             .legend(closure);
+    } else if draw == 2 {
+        let k = read_i32("Choose number of pack: ");
+        let mut ns = Vec::new();
+        for i in 1..=2_i32.pow(k as u32 - 1) {
+            ns.push(2_i32.pow(k as u32) + i);
+        }
+
+        for n in ns {
+            let i = n % 3;
+            let color = colors[i as usize];
+            let closure = move |(x, y)| PathElement::new(vec![(x, y), (x + 20, y)], color);
+            chart
+                .draw_series(LineSeries::new(
+                    (0..=500000)
+                        .map(|x| x as f32 / 500000.0)
+                        .map(|x| (x, fi(x, n))),
+                    color,
+                ))?
+                .label(format!("fi{}(x)", n))
+                .legend(closure);
+        }
     }
 
     chart
@@ -59,4 +84,18 @@ fn count_k_and_i(n: i32) -> (f32, f32) {
     let k = (((n - 1) as f32).log2()).floor();
     let i = (n as f32 - 2_f32.powf(k)).round();
     return (k, i);
+}
+
+fn read_i32(comment: &str) -> i32 {
+    print!("{}", comment);
+    io::stdout().flush().unwrap();
+
+    let mut string: String = String::new();
+
+    io::stdin()
+        .read_line(&mut string)
+        .ok()
+        .expect("Error read line!");
+
+    return string.trim().parse::<i32>().unwrap();
 }
