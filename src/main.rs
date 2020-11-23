@@ -6,7 +6,7 @@ use std::io::Write;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // create graph picture and fill it by white color.
-    let root = BitMapBackend::new("graph.png", (640, 480)).into_drawing_area();
+    let root = BitMapBackend::new("graph.png", (800, 800)).into_drawing_area();
     root.fill(&WHITE)?;
     // create area for graph.
     let mut chart = ChartBuilder::on(&root)
@@ -14,7 +14,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .margin(5)
         .x_label_area_size(30)
         .y_label_area_size(30)
-        .build_cartesian_2d(0f32..1f32, 0f32..1f32)?;
+        .build_cartesian_2d(-0.1f32..1.1f32, -0.1f32..1.1f32)?;
 
     chart.configure_mesh().draw()?;
 
@@ -45,8 +45,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             // k must be >= 1.
             panic!("k must be >= 1");
         }
+
         let mut ns = Vec::new();
-        for i in 1..=2_i32.pow(k as u32 - 1) {
+        for i in 1..=2_i32.pow(k as u32) {
             ns.push(2_i32.pow(k as u32) + i);
         }
 
@@ -84,10 +85,23 @@ fn fi(x: f32, n: i32) -> f32 {
     } else {
         let (k, i) = count_k_and_i(n);
 
-        if ((2_f32 * i - 2_f32) / 2_f32.powf(k) <= x) && (x <= 2_f32 * i / 2_f32.powf(k)) {
-            return 1_f32 - (x * 2_f32.powf(k) - 2_f32 * i + 1_f32).abs();
-        } else {
+        if x == (2_f32 * i - 1_f32) / 2_f32.powf(k + 1_f32) {
+            return 1_f32;
+        } else if (x < (i - 1_f32) / 2_f32.powf(k)) || (x > i / 2_f32.powf(k)) {
             return 0_f32;
+        } else {
+            let x2 = (2_f32 * i - 1_f32) / 2_f32.powf(k + 1_f32);
+
+            let y1 = 0_f32;
+            let y2 = 1_f32;
+
+            if x < (2_f32 * i - 1_f32) / 2_f32.powf(k + 1_f32) {
+                let x1 = (i - 1_f32) / 2_f32.powf(k);
+                return (-x1 * y2 + x2 * y1 - (y1 - y2) * x) / (x2 - x1);
+            } else {
+                let x1 = (i) / 2_f32.powf(k);
+                return (-x1 * y2 + x2 * y1 - (y1 - y2) * x) / (x2 - x1);
+            }
         }
     }
 }
