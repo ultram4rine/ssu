@@ -90,18 +90,19 @@ fn fi(x: f32, n: i32) -> f32 {
         } else if (x < (i - 1_f32) / 2_f32.powf(k)) || (x > i / 2_f32.powf(k)) {
             return 0_f32;
         } else {
+            let x1: f32;
             let x2 = (2_f32 * i - 1_f32) / 2_f32.powf(k + 1_f32);
 
             let y1 = 0_f32;
             let y2 = 1_f32;
 
             if x < (2_f32 * i - 1_f32) / 2_f32.powf(k + 1_f32) {
-                let x1 = (i - 1_f32) / 2_f32.powf(k);
-                return (-x1 * y2 + x2 * y1 - (y1 - y2) * x) / (x2 - x1);
+                x1 = (i - 1_f32) / 2_f32.powf(k);
             } else {
-                let x1 = (i) / 2_f32.powf(k);
-                return (-x1 * y2 + x2 * y1 - (y1 - y2) * x) / (x2 - x1);
+                x1 = (i) / 2_f32.powf(k);
             }
+
+            return (-x1 * y2 + x2 * y1 - (y1 - y2) * x) / (x2 - x1);
         }
     }
 }
