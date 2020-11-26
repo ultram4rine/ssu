@@ -1,7 +1,7 @@
 extern crate serde;
 extern crate serde_xml_rs;
 
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Product {
     pub id: u64,
     pub name: String,
@@ -18,6 +18,35 @@ impl Product {
     }
 }
 
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct ProductsList {
     pub products: Vec<Product>,
+}
+
+impl ProductsList {
+    pub fn new(products: Vec<Product>) -> ProductsList {
+        ProductsList { products: products }
+    }
+
+    pub fn add(&mut self, product: Product) {
+        let item = self.products.to_vec().into_iter().find(|x| x == &product);
+        match item {
+            Some(p) => println!("Products list already contains customer with {} id", p.id),
+            None => self.products.push(product),
+        }
+    }
+
+    pub fn remove(&mut self, product: Product) {
+        let item = self.products.to_vec().into_iter().find(|x| x == &product);
+        match item {
+            Some(_) => {
+                let index = self.products.iter().position(|x| *x == product).unwrap();
+                self.products.remove(index);
+            }
+            None => println!(
+                "Products list doesn't contains product with {} id",
+                product.id
+            ),
+        }
+    }
 }

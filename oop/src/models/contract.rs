@@ -1,6 +1,7 @@
 use crate::models::customer::Customer;
 use crate::models::product::Product;
 
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Contract {
     pub id: u64,
     pub customer: Customer,
@@ -36,6 +37,37 @@ impl Contract {
     }
 }
 
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct ContractsList {
     pub contracts: Vec<Contract>,
+}
+
+impl ContractsList {
+    pub fn new(contracts: Vec<Contract>) -> ContractsList {
+        ContractsList {
+            contracts: contracts,
+        }
+    }
+
+    pub fn add(&mut self, contract: Contract) {
+        let item = self.contracts.to_vec().into_iter().find(|x| x == &contract);
+        match item {
+            Some(c) => println!("Contracts list already contains contract with {} id", c.id),
+            None => self.contracts.push(contract),
+        }
+    }
+
+    pub fn remove(&mut self, contract: Contract) {
+        let item = self.contracts.to_vec().into_iter().find(|x| x == &contract);
+        match item {
+            Some(_) => {
+                let index = self.contracts.iter().position(|x| *x == contract).unwrap();
+                self.contracts.remove(index);
+            }
+            None => println!(
+                "Contracts list doesn't contains contract with {} id",
+                contract.id
+            ),
+        }
+    }
 }
