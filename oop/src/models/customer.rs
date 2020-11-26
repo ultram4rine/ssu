@@ -1,3 +1,7 @@
+extern crate serde;
+
+use serde::{Deserialize, Serialize};
+
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Customer {
     pub id: u64,

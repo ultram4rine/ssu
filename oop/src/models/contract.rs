@@ -1,3 +1,7 @@
+extern crate serde;
+
+use serde::{Deserialize, Serialize};
+
 use crate::models::customer::Customer;
 use crate::models::product::Product;
 
