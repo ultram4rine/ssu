@@ -1,11 +1,9 @@
-#[macro_use]
-extern crate serde_derive;
-
 mod models;
 
-use models::contract::Contract;
-use models::customer::Customer;
-use models::product::Product;
+use models::contract::{Contract, ContractsList};
+use models::customer::{Customer, CustomersList};
+use models::pawnshop::Pawnshop;
+use models::product::{Product, ProductsList};
 
 use rusqlite::{Connection, Result, NO_PARAMS};
 
@@ -43,10 +41,28 @@ fn main() -> Result<()> {
     )?;
 
     let p = Product::new(1, "Gold Ring".to_string(), 600);
-
     let cust = Customer::new(1, "Some name".to_string(), "89990000000".to_string());
+    let cont = Contract::new(
+        1,
+        cust,
+        vec![p],
+        "rdate".to_string(),
+        "frdate".to_string(),
+        600,
+        700,
+        false,
+    );
 
-    println!("{}, {}", p.id, cust.id);
+    let pawnshop = Pawnshop::new(
+        ContractsList::new(vec![cont]),
+        CustomersList::new(vec![Customer::new(
+            1,
+            "Some name".to_string(),
+            "89990000000".to_string(),
+        )]),
+        ProductsList::new(vec![Product::new(1, "Gold Ring".to_string(), 600)]),
+    );
+    pawnshop.to_xml("pawnshop.xml".to_string());
 
     Ok(())
 }
