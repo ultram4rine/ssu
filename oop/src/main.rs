@@ -44,8 +44,8 @@ fn main() -> Result<()> {
     let cust = Customer::new(1, "Some name".to_string(), "89990000000".to_string());
     let cont = Contract::new(
         1,
-        cust,
-        vec![p],
+        cust.clone(),
+        vec![p.clone()],
         "rdate".to_string(),
         "frdate".to_string(),
         600,
@@ -54,13 +54,9 @@ fn main() -> Result<()> {
     );
 
     let pawnshop = Pawnshop::new(
-        ContractsList::new(vec![cont]),
-        CustomersList::new(vec![Customer::new(
-            1,
-            "Some name".to_string(),
-            "89990000000".to_string(),
-        )]),
-        ProductsList::new(vec![Product::new(1, "Gold Ring".to_string(), 600)]),
+        ContractsList::new(vec![cont.clone()]),
+        CustomersList::new(vec![cust.clone()]),
+        ProductsList::new(vec![p.clone()]),
     );
     pawnshop.to_xml("pawnshop.xml".to_string());
 
