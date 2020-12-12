@@ -1,5 +1,6 @@
 extern crate serde;
 
+use crate::lists::lists::ListMethods;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
@@ -19,30 +20,27 @@ impl Product {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct ProductsList {
-    pub products: Vec<Product>,
-}
+pub type ProductsList = Vec<Product>;
 
-impl ProductsList {
-    pub fn new(products: Vec<Product>) -> ProductsList {
-        ProductsList { products: products }
+impl ListMethods<Product> for ProductsList {
+    fn new_list(products: Vec<Product>) -> ProductsList {
+        products
     }
 
-    pub fn add(&mut self, product: Product) {
-        let item = self.products.to_vec().into_iter().find(|x| x == &product);
+    fn add_item(&mut self, product: Product) {
+        let item = self.to_vec().into_iter().find(|x| x == &product);
         match item {
             Some(p) => println!("Products list already contains customer with {} id", p.id),
-            None => self.products.push(product),
+            None => self.push(product),
         }
     }
 
-    pub fn remove(&mut self, product: Product) {
-        let item = self.products.to_vec().into_iter().find(|x| x == &product);
+    fn remove_item(&mut self, product: Product) {
+        let item = self.to_vec().into_iter().find(|x| x == &product);
         match item {
             Some(_) => {
-                let index = self.products.iter().position(|x| *x == product).unwrap();
-                self.products.remove(index);
+                let index = self.iter().position(|x| *x == product).unwrap();
+                self.remove(index);
             }
             None => println!(
                 "Products list doesn't contains product with {} id",

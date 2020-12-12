@@ -1,5 +1,7 @@
+mod lists;
 mod models;
 
+use lists::lists::ListMethods;
 use models::contract::{Contract, ContractsList};
 use models::customer::{Customer, CustomersList};
 use models::pawnshop::Pawnshop;
@@ -54,11 +56,17 @@ fn main() -> Result<()> {
     );
 
     let pawnshop = Pawnshop::new(
-        ContractsList::new(vec![cont.clone()]),
-        CustomersList::new(vec![cust.clone()]),
-        ProductsList::new(vec![p.clone()]),
+        ContractsList::new_list(vec![cont.clone()]),
+        CustomersList::new_list(vec![cust.clone()]),
+        ProductsList::new_list(vec![p.clone()]),
     );
-    pawnshop.to_xml("pawnshop.xml".to_string());
+    pawnshop.to_json("pawnshop.json".to_string());
+
+    let pawnshop2 = Pawnshop::from_json("pawnshop.json".to_string());
+    match pawnshop2 {
+        Some(p) => println!("{}", p.contracts[0].id),
+        None => println!("some shit"),
+    }
 
     Ok(())
 }

@@ -2,6 +2,7 @@ extern crate serde;
 
 use serde::{Deserialize, Serialize};
 
+use crate::lists::lists::ListMethods;
 use crate::models::customer::Customer;
 use crate::models::product::Product;
 
@@ -41,32 +42,27 @@ impl Contract {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct ContractsList {
-    pub contracts: Vec<Contract>,
-}
+pub type ContractsList = Vec<Contract>;
 
-impl ContractsList {
-    pub fn new(contracts: Vec<Contract>) -> ContractsList {
-        ContractsList {
-            contracts: contracts,
-        }
+impl ListMethods<Contract> for ContractsList {
+    fn new_list(contracts: Vec<Contract>) -> Self {
+        contracts
     }
 
-    pub fn add(&mut self, contract: Contract) {
-        let item = self.contracts.to_vec().into_iter().find(|x| x == &contract);
+    fn add_item(&mut self, contract: Contract) {
+        let item = self.to_vec().into_iter().find(|x| x == &contract);
         match item {
             Some(c) => println!("Contracts list already contains contract with {} id", c.id),
-            None => self.contracts.push(contract),
+            None => self.push(contract),
         }
     }
 
-    pub fn remove(&mut self, contract: Contract) {
-        let item = self.contracts.to_vec().into_iter().find(|x| x == &contract);
+    fn remove_item(&mut self, contract: Contract) {
+        let item = self.to_vec().into_iter().find(|x| x == &contract);
         match item {
             Some(_) => {
-                let index = self.contracts.iter().position(|x| *x == contract).unwrap();
-                self.contracts.remove(index);
+                let index = self.iter().position(|x| *x == contract).unwrap();
+                self.remove(index);
             }
             None => println!(
                 "Contracts list doesn't contains contract with {} id",

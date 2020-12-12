@@ -1,5 +1,6 @@
 extern crate serde;
 
+use crate::lists::lists::ListMethods;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
@@ -19,32 +20,27 @@ impl Customer {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct CustomersList {
-    pub customers: Vec<Customer>,
-}
+pub type CustomersList = Vec<Customer>;
 
-impl CustomersList {
-    pub fn new(customers: Vec<Customer>) -> CustomersList {
-        CustomersList {
-            customers: customers,
-        }
+impl ListMethods<Customer> for CustomersList {
+    fn new_list(customers: Vec<Customer>) -> CustomersList {
+        customers
     }
 
-    pub fn add(&mut self, customer: Customer) {
-        let item = self.customers.to_vec().into_iter().find(|x| x == &customer);
+    fn add_item(&mut self, customer: Customer) {
+        let item = self.to_vec().into_iter().find(|x| x == &customer);
         match item {
             Some(c) => println!("Customers list already contains customer with {} id", c.id),
-            None => self.customers.push(customer),
+            None => self.push(customer),
         }
     }
 
-    pub fn remove(&mut self, customer: Customer) {
-        let item = self.customers.to_vec().into_iter().find(|x| x == &customer);
+    fn remove_item(&mut self, customer: Customer) {
+        let item = self.to_vec().into_iter().find(|x| x == &customer);
         match item {
             Some(_) => {
-                let index = self.customers.iter().position(|x| *x == customer).unwrap();
-                self.customers.remove(index);
+                let index = self.iter().position(|x| *x == customer).unwrap();
+                self.remove(index);
             }
             None => println!(
                 "Customers list doesn't contains customer with {} id",
