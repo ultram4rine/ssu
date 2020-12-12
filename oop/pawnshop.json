@@ -1,0 +1,38 @@
+{
+  "contracts": [
+    {
+      "id": 1,
+      "customer": {
+        "id": 1,
+        "name": "Some name",
+        "phone": "89990000000"
+      },
+      "products": [
+        {
+          "id": 1,
+          "name": "Gold Ring",
+          "cost": 600
+        }
+      ],
+      "return_date": "rdate",
+      "factual_return_date": "frdate",
+      "start_cost": 600,
+      "buyback_cost": 700,
+      "closed": false
+    }
+  ],
+  "customers": [
+    {
+      "id": 1,
+      "name": "Some name",
+      "phone": "89990000000"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Gold Ring",
+      "cost": 600
+    }
+  ]
+}
