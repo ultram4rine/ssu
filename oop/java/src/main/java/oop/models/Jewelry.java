@@ -1,10 +1,20 @@
 package oop.models;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Jewelry {
     private int id;
     private String name;
     private int jewelryCost;
     private int makingCost;
+
+    public Jewelry(int id, String name, int jewelryCost, int makingCost) {
+        setId(id);
+        setName(name);
+        setJewelryCost(jewelryCost);
+        setMakingCost(makingCost);
+    }
 
     public void setId(int id) {
         this.id = id;
@@ -36,5 +46,9 @@ public class Jewelry {
 
     public int getMakingCost() {
         return makingCost;
+    }
+
+    public String toJSON() throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(this);
     }
 }
