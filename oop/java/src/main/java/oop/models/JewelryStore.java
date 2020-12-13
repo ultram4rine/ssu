@@ -162,7 +162,7 @@ public class JewelryStore {
         try {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);
-            ResultSet rs = statement.executeQuery("SELECT id, jewelry_id, customer_id");
+            ResultSet rs = statement.executeQuery("SELECT id, jewelry_id, customer_id FROM sales");
             List<Sale> sales = new ArrayList<Sale>();
             while (rs.next()) {
                 Statement jStmt = connection.createStatement();

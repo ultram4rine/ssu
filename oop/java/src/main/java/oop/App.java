@@ -1,15 +1,11 @@
 package oop;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import oop.models.Customer;
 import oop.models.Jewelry;
@@ -34,9 +30,9 @@ public class App {
             statement.execute(
                     "CREATE TABLE IF NOT EXISTS sales ('id' INTEGER PRIMARY KEY, 'jewelry_id' INTEGER, 'customer_id' INTEGER, FOREIGN KEY (jewelry_id) REFERENCES jewelries (id) ON DELETE NO ACTION, FOREIGN KEY (customer_id) REFERENCES customers (id) ON DELETE NO ACTION)");
 
-            Jewelry goldRing = new Jewelry(1, "Gold_Ring", 800, 600);
+            Jewelry goldRing = new Jewelry(1, "Gold Ring", 800, 600);
 
-            Customer AlexGoldman = new Customer(1, "Alex", "Goldman", "202-555-0125", "West_Avenue");
+            Customer AlexGoldman = new Customer(1, "Alex", "Goldman", "202-555-0125", "West Avenue");
 
             Sale sale1 = new Sale(1, goldRing, AlexGoldman);
 
@@ -44,9 +40,7 @@ public class App {
                     new ArrayList<Sale>());
 
             store.addJewelry(goldRing);
-
             store.addCustomer(AlexGoldman);
-
             store.addSale(sale1);
 
             try {
