@@ -1,5 +1,8 @@
 package oop.models;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,6 +16,9 @@ public class Customer {
     private String address;
 
     private Pattern phoneRegex = Pattern.compile("^(\\d{3}[- .]?){2}\\d{4}$");
+
+    public Customer() {
+    }
 
     public Customer(int id, String name, String surname, String phone, String address) {
         setId(id);
@@ -68,5 +74,16 @@ public class Customer {
 
     public String toJSON() throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(this);
+    }
+
+    public void saveToDB(Connection connection) {
+        try {
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+            statement.executeUpdate("INSERT INTO customers(id, name, surname, phone, address) VALUES (" + getId()
+                    + ", '" + getName() + "', '" + getSurname() + "', '" + getPhone() + "', '" + getAddress() + "')");
+        } catch (SQLException e) {
+            System.err.println("Error inserting customer: " + e.getMessage());
+        }
     }
 }

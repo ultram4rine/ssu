@@ -75,5 +75,3 @@ buildNumber.properties
 .settings/
 .classpath
 .project
-
-sqlite.db

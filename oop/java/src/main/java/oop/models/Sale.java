@@ -1,17 +1,24 @@
 package oop.models;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Sale {
     private int id;
-    private int jewelryId;
-    private int customerId;
+    private Jewelry jewelry;
+    private Customer customer;
 
-    public Sale(int id, int jewelryId, int customerId) {
+    public Sale() {
+    }
+
+    public Sale(int id, Jewelry jewelry, Customer customer) {
         setId(id);
-        setJewelryId(jewelryId);
-        setCustomerId(customerId);
+        setJewelry(jewelry);
+        setCustomer(customer);
     }
 
     public void setId(int id) {
@@ -22,23 +29,34 @@ public class Sale {
         return id;
     }
 
-    public void setJewelryId(int jewelryId) {
-        this.jewelryId = jewelryId;
+    public void setJewelry(Jewelry jewelry) {
+        this.jewelry = jewelry;
     }
 
-    public int getJewelryId() {
-        return jewelryId;
+    public Jewelry getJewelry() {
+        return jewelry;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public Customer getCustomer() {
+        return customer;
     }
 
     public String toJSON() throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(this);
+    }
+
+    public void saveToDB(Connection connection) {
+        try {
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+            statement.executeUpdate("INSERT INTO sales(id, jewelry_id, customer_id) VALUES (" + getId() + ", "
+                    + getJewelry().getId() + ", " + getCustomer().getId() + ")");
+        } catch (SQLException e) {
+            System.err.println("Error inserting sale: " + e.getMessage());
+        }
     }
 }

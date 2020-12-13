@@ -1,5 +1,9 @@
 package oop.models;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -8,6 +12,9 @@ public class Jewelry {
     private String name;
     private int jewelryCost;
     private int makingCost;
+
+    public Jewelry() {
+    }
 
     public Jewelry(int id, String name, int jewelryCost, int makingCost) {
         setId(id);
@@ -50,5 +57,16 @@ public class Jewelry {
 
     public String toJSON() throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(this);
+    }
+
+    public void saveToDB(Connection connection) {
+        try {
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+            statement.executeUpdate("INSERT INTO jewelries(id, name, jewelry_cost, making_cost) VALUES (" + getId()
+                    + ", '" + getName() + "', " + getJewelryCost() + ", " + getMakingCost() + ")");
+        } catch (SQLException e) {
+            System.err.println("Error inserting jewelry: " + e.getMessage());
+        }
     }
 }
