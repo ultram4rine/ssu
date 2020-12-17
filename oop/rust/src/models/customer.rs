@@ -35,7 +35,7 @@ impl DB<Customer> for CustomersList {
         Ok(())
     }
 
-    fn from_db(conn: &Connection) -> Result<CustomersList> {
+    fn from_db(&self, conn: &Connection) -> Result<CustomersList> {
         let mut stmt = conn.prepare("SELECT id, name, phone FROM customers")?;
         let iter = stmt.query_map(NO_PARAMS, |row| {
             Ok(Customer::new(row.get(0)?, row.get(1)?, row.get(2)?))

@@ -43,7 +43,7 @@ impl DB<Product> for ProductsList {
         Ok(())
     }
 
-    fn from_db(conn: &Connection) -> Result<ProductsList> {
+    fn from_db(&self, conn: &Connection) -> Result<ProductsList> {
         let mut stmt = conn.prepare("SELECT id, name, cost FROM products")?;
         let iter = stmt.query_map(NO_PARAMS, |row| {
             Ok(Product::new(row.get(0)?, row.get(1)?, row.get(2)?))

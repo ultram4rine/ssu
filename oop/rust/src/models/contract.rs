@@ -31,6 +31,9 @@ impl Contract {
         buyback_cost: i32,
         closed: bool,
     ) -> Contract {
+        if factual_return_date != "" && factual_return_date < return_date {
+            println!("factual return date lesser than return date!");
+        }
         Contract {
             id: id,
             customer: customer,
@@ -63,7 +66,7 @@ impl DB<Contract> for ContractsList {
         Ok(())
     }
 
-    fn from_db(conn: &Connection) -> Result<ContractsList> {
+    fn from_db(&self, conn: &Connection) -> Result<ContractsList> {
         let mut stmt = conn.prepare("SELECT id, customer_id, return_date, factual_return_date, start_cost, buyback_cost, closed FROM contracts")?;
         let iter = stmt.query_map(NO_PARAMS, |row| {
             let mut stmt_c = conn.prepare("SELECT name, phone FROM customers WHERE id = ?1")?;
