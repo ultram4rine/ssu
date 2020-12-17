@@ -1,6 +1,6 @@
 extern crate serde;
 
-use crate::lists::lists::ListMethods;
+use crate::lists::lists::List;
 use crate::models::contract::{Contract, ContractsList};
 use crate::models::customer::{Customer, CustomersList};
 use crate::models::product::{Product, ProductsList};

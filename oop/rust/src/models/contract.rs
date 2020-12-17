@@ -2,7 +2,7 @@ extern crate serde;
 
 use serde::{Deserialize, Serialize};
 
-use crate::lists::lists::ListMethods;
+use crate::lists::lists::List;
 use crate::models::customer::Customer;
 use crate::models::product::Product;
 
@@ -44,7 +44,7 @@ impl Contract {
 
 pub type ContractsList = Vec<Contract>;
 
-impl ListMethods<Contract> for ContractsList {
+impl List<Contract> for ContractsList {
     fn new_list(contracts: Vec<Contract>) -> Self {
         contracts
     }

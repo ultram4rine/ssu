@@ -1,7 +1,7 @@
 mod lists;
 mod models;
 
-use lists::lists::ListMethods;
+use lists::lists::List;
 use models::contract::{Contract, ContractsList};
 use models::customer::{Customer, CustomersList};
 use models::pawnshop::Pawnshop;

@@ -1,6 +1,6 @@
 extern crate serde;
 
-use crate::lists::lists::ListMethods;
+use crate::lists::lists::List;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
@@ -22,7 +22,7 @@ impl Product {
 
 pub type ProductsList = Vec<Product>;
 
-impl ListMethods<Product> for ProductsList {
+impl List<Product> for ProductsList {
     fn new_list(products: Vec<Product>) -> ProductsList {
         products
     }
