@@ -4,7 +4,7 @@
       "id": 1,
       "customer": {
         "id": 1,
-        "name": "Some name",
+        "name": "John Johnson",
         "phone": "89990000000"
       },
       "products": [
@@ -14,17 +14,17 @@
           "cost": 600
         }
       ],
-      "return_date": "rdate",
-      "factual_return_date": "frdate",
+      "return_date": "2020-11-28UTC",
+      "factual_return_date": "2020-11-30UTC",
       "start_cost": 600,
       "buyback_cost": 700,
-      "closed": false
+      "closed": true
     }
   ],
   "customers": [
     {
       "id": 1,
-      "name": "Some name",
+      "name": "John Johnson",
       "phone": "89990000000"
     }
   ],
@@ -33,6 +33,11 @@
       "id": 1,
       "name": "Gold Ring",
       "cost": 600
+    },
+    {
+      "id": 2,
+      "name": "Silver Ring",
+      "cost": 400
     }
   ]
 }
