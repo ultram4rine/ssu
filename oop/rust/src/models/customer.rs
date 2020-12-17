@@ -1,17 +1,19 @@
 extern crate serde;
 
+use crate::db::db::DB;
 use crate::lists::lists::List;
+use rusqlite::{params, Connection, Result, NO_PARAMS};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Customer {
-    pub id: u64,
+    pub id: i32,
     pub name: String,
     pub phone: String,
 }
 
 impl Customer {
-    pub fn new(id: u64, name: String, phone: String) -> Customer {
+    pub fn new(id: i32, name: String, phone: String) -> Customer {
         Customer {
             id: id,
             name: name,
@@ -21,6 +23,32 @@ impl Customer {
 }
 
 pub type CustomersList = Vec<Customer>;
+
+impl DB<Customer> for CustomersList {
+    fn to_db(&self, conn: &Connection) -> Result<()> {
+        for c in self {
+            conn.execute(
+                "INSERT INTO customers (id, name, phone) VALUES (?1, ?2, ?3)",
+                params![c.id, c.name, c.phone],
+            )?;
+        }
+        Ok(())
+    }
+
+    fn from_db(conn: &Connection) -> Result<CustomersList> {
+        let mut stmt = conn.prepare("SELECT id, name, phone FROM customers")?;
+        let iter = stmt.query_map(NO_PARAMS, |row| {
+            Ok(Customer::new(row.get(0)?, row.get(1)?, row.get(2)?))
+        })?;
+
+        let mut customers = Vec::new();
+        for c in iter {
+            customers.push(c?)
+        }
+
+        Ok(CustomersList::new_list(customers))
+    }
+}
 
 impl List<Customer> for CustomersList {
     fn new_list(customers: Vec<Customer>) -> CustomersList {
