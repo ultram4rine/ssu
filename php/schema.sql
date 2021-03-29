@@ -1,0 +1,18 @@
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    password_hash VARCHAR(64) NOT NULL,
+    root BOOLEAN NOT NULL,
+    full_name VARCHAR(100) NOT NULL,
+    last_accessed_at DATETIME NOT NULL
+);
+CREATE TABLE tasks (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    created_at DATETIME NOT NULL,
+    user_id INT NOT NULL,
+    planned_closed_at DATETIME NOT NULL,
+    closed_at DATETIME NULL,
+    name VARCHAR(50) NOT NULL,
+    description TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
