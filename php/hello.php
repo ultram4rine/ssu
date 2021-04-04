@@ -1,20 +1,35 @@
-<?php
-require_once 'conn.php';
+<!DOCTYPE html>
+<html>
 
-$mysqli = new mysqli($host, $user, $password, $database);
+<head>
+    <meta charset="UTF-8">
+    <link type="text/css" rel="stylesheet" href="public/css/global.css">
+    <link type="text/css" rel="stylesheet" href="public/css/header.css">
+</head>
 
-if ($mysqli->connect_errno) {
-    printf("Соединение не удалось: %s\n", $mysqli->connect_error);
-    exit();
-}
+<body>
+    <?php echo file_get_contents("public/html/header.html"); ?>
+    <main>
+        <?php
+            require_once 'conn.php';
 
-$result = $mysqli->query("SELECT * FROM users"); 
-if (!$result)
-{
-    printf("Сообщение ошибки: %s\n", $mysqli->error);
-} else {
-    echo "Выполнение запроса прошло успешно";
-}
+            $mysqli = new mysqli($host, $user, $password, $database);
 
-$mysqli->close();
-?>
+            if ($mysqli->connect_errno) {
+                printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+                exit();
+            }
+
+            $result = $mysqli->query("SELECT * FROM users");
+            if (!$result) {
+                printf("Сообщение ошибки: %s\n", $mysqli->error);
+            } else {
+                echo "Выполнение запроса прошло успешно";
+            }
+
+            $mysqli->close();
+        ?>
+    </main>
+</body>
+
+</html>
