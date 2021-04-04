@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <title>Новая задача</title>
     <link type="text/css" rel="stylesheet" href="public/css/global.css">
     <link type="text/css" rel="stylesheet" href="public/css/header.css">
     <link type="text/css" rel="stylesheet" href="public/css/form.css">
