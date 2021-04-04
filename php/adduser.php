@@ -5,42 +5,61 @@
     <meta charset="UTF-8">
     <link type="text/css" rel="stylesheet" href="public/css/global.css">
     <link type="text/css" rel="stylesheet" href="public/css/header.css">
+    <link type="text/css" rel="stylesheet" href="public/css/form.css">
     <link type="text/css" rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <style>
-        input,
-        textarea,
-        select {
-            width: 150px;
-            margin: 0;
-
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-        }
-    </style>
 </head>
 
 <body>
     <?php echo file_get_contents("public/html/header.html"); ?>
-    <form action="adduser.php" method="POST">
-        <label for="username">Логин: </label>
-        <input id="username" name="username" type="text" required="required" maxlength="50" /> <br />
+    <main>
+        <div class="container">
+            <form action="adduser.php" method="POST">
+                <div class="row">
+                    <div class="col-25">
+                        <label for="username">Логин</label>
+                    </div>
+                    <div class="col-75">
+                        <input id="username" name="username" type="text" required="required" maxlength="50" />
+                    </div>
+                </div>
 
-        <label for="password">Пароль: </label>
-        <input id="password" name="password" type="password" required="required" maxlength="20" /> <br />
+                <div class="row">
+                    <div class="col-25">
+                        <label for="password">Пароль</label>
+                    </div>
+                    <div class="col-75">
+                        <input id="password" name="password" type="password" required="required" maxlength="20" />
+                    </div>
+                </div>
 
-        <label for="fullname">Полное имя: </label>
-        <input id="fullname" name="fullname" type="text" required="required" maxlength="100" /> <br />
+                <div class="row">
+                    <div class="col-25">
+                        <label for="fullname">Полное имя</label>
+                    </div>
+                    <div class="col-75">
+                        <input id="fullname" name="fullname" type="text" required="required" maxlength="100" />
+                    </div>
+                </div>
 
-        <label for="root">Права администратора: </label>
-        <input id="root" name="root" type="checkbox" /> <br />
+                <div class="row">
+                    <div class="col-25">
+                        <label for="root">Права администратора</label>
+                    </div>
+                    <div class="col-75">
+                        <input id="root" name="root" type="checkbox" />
+                    </div>
+                </div>
 
-        <input type="submit" value="Добавить пользователя" />
-    </form>
+                <div class="row">
+                    <input type="submit" value="Добавить пользователя" />
+                </div>
+            </form>
+        </div>
+    </main>
 </body>
 
 </html>
