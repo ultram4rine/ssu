@@ -14,36 +14,36 @@
 </head>
 
 <body>
-    <?php echo file_get_contents("public/html/header.html"); ?>
-    <main>
-        <div class="container">
-            <form action="addtask.php" method="POST">
-                <div class="row">
-                    <div class="col-25">
-                        <label for="name">Заголовок </label>
+    <div class="box">
+        <?php echo file_get_contents("public/html/header.html"); ?>
+        <main>
+            <div class="container">
+                <form action="addtask.php" method="POST">
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="name">Заголовок </label>
+                        </div>
+                        <div class="col-75">
+                            <input id="name" name="name" type="text" required="required" maxlength="50" />
+                        </div>
                     </div>
-                    <div class="col-75">
-                        <input id="name" name="name" type="text" required="required" maxlength="50" />
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-25">
-                        <label for="desc">Описание</label>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="desc">Описание</label>
+                        </div>
+                        <div class="col-75">
+                            <textarea id="desc" name="desc" required="required" maxlength="65535"></textarea>
+                        </div>
                     </div>
-                    <div class="col-75">
-                        <textarea id="desc" name="desc" required="required"
-                            maxlength="65535"></textarea>
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-25">
-                        <label for="empl">Сотрудник</label>
-                    </div>
-                    <div class="col-75">
-                        <select class="empl-select" id="empl" name="empl">
-                            <?php
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="empl">Сотрудник</label>
+                        </div>
+                        <div class="col-75">
+                            <select class="empl-select" id="empl" name="empl">
+                                <?php
                                 require_once 'conn.php';
 
                                 $mysqli = new mysqli($host, $user, $password, $database);
@@ -66,16 +66,17 @@
 
                                 $mysqli->close();
                             ?>
-                        </select>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div class="row">
-                    <input type="submit" value="Добавить задачу" />
-                </div>
-            </form>
-        </div>
-    </main>
+                    <div class="row">
+                        <input type="submit" value="Добавить задачу" />
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
     <script>
         $(document).ready(function () {
             $('.empl-select').select2();

@@ -9,52 +9,54 @@
 </head>
 
 <body>
-    <?php echo file_get_contents("public/html/header.html"); ?>
-    <main>
-        <div class="container">
-            <form action="adduser.php" method="POST">
-                <div class="row">
-                    <div class="col-25">
-                        <label for="username">Логин</label>
+    <div class="box">
+        <?php echo file_get_contents("public/html/header.html"); ?>
+        <main>
+            <div class="container">
+                <form action="adduser.php" method="POST">
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="username">Логин</label>
+                        </div>
+                        <div class="col-75">
+                            <input id="username" name="username" type="text" required="required" maxlength="50" />
+                        </div>
                     </div>
-                    <div class="col-75">
-                        <input id="username" name="username" type="text" required="required" maxlength="50" />
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-25">
-                        <label for="password">Пароль</label>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="password">Пароль</label>
+                        </div>
+                        <div class="col-75">
+                            <input id="password" name="password" type="password" required="required" maxlength="20" />
+                        </div>
                     </div>
-                    <div class="col-75">
-                        <input id="password" name="password" type="password" required="required" maxlength="20" />
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-25">
-                        <label for="fullname">Полное имя</label>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="fullname">Полное имя</label>
+                        </div>
+                        <div class="col-75">
+                            <input id="fullname" name="fullname" type="text" required="required" maxlength="100" />
+                        </div>
                     </div>
-                    <div class="col-75">
-                        <input id="fullname" name="fullname" type="text" required="required" maxlength="100" />
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-25">
-                        <label for="root">Права администратора</label>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="root">Права администратора</label>
+                        </div>
+                        <div class="col-75">
+                            <input id="root" name="root" type="checkbox" />
+                        </div>
                     </div>
-                    <div class="col-75">
-                        <input id="root" name="root" type="checkbox" />
-                    </div>
-                </div>
 
-                <div class="row">
-                    <input type="submit" value="Добавить пользователя" />
-                </div>
-            </form>
-        </div>
-    </main>
+                    <div class="row">
+                        <input type="submit" value="Добавить пользователя" />
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
 </body>
 
 </html>
