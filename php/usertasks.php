@@ -7,6 +7,9 @@
     <link type="text/css" rel="stylesheet" href="public/css/global.css">
     <link type="text/css" rel="stylesheet" href="public/css/header.css">
     <link type="text/css" rel="stylesheet" href="public/css/table.css">
+    <link type="text/css" rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -14,18 +17,15 @@
         <?php echo file_get_contents("public/html/header.html"); ?>
         <main>
             <div class="container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Идентификатор</th>
-                            <th>Заголовок</th>
-                            <th>Время добавления</th>
-                            <th>Планируемая дата завершения</th>
-                            <th>Закрыта</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
+                <table id="tasks">
+                    <tr>
+                        <th>Идентификатор <i id="sort-icon" class="fas fa-sort"></i></th>
+                        <th>Заголовок <i id="sort-icon" class="fas fa-sort"></i></th>
+                        <th>Время добавления <i id="sort-icon" class="fas fa-sort-up"></i></th>
+                        <th>Планируемая дата завершения <i id="sort-icon" class="fas fa-sort"></i></th>
+                        <th>Закрыта <i id="sort-icon" class="fas fa-sort"></i></th>
+                    </tr>
+                    <?php
                         $id = htmlspecialchars($_GET["id"]);
                         if(!empty($id)) {
                             require_once 'conn.php';
@@ -56,11 +56,47 @@
                             print("No content");
                         }
                     ?>
-                    </tbody>
                 </table>
             </div>
         </main>
     </div>
+
+    <script>
+        $('th').click(function () {
+            $('th').children().removeClass("fa-sort-up");
+            $('th').children().removeClass("fa-sort-down");
+            $('th').children().addClass("fa-sort");
+
+            $(this).children().removeClass("fa-sort");
+
+            var table = $(this).parents('table').eq(0)
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+            this.asc = !this.asc
+
+            $(this).children().removeClass("fa-sort-down");
+            $(this).children().addClass("fa-sort-up");
+            if (!this.asc) {
+                $(this).children().removeClass("fa-sort-up");
+                $(this).children().addClass("fa-sort-down");
+                rows = rows.reverse()
+            }
+            for (var i = 0; i < rows.length; i++) {
+                table.append(rows[i])
+            }
+        })
+
+        function comparer(index) {
+            return function (a, b) {
+                var valA = getCellValue(a, index),
+                    valB = getCellValue(b, index)
+                return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+            }
+        }
+
+        function getCellValue(row, index) {
+            return $(row).children('td').eq(index).text()
+        }
+    </script>
 </body>
 
 </html>
