@@ -23,7 +23,7 @@
                         <th>Заголовок <i id="sort-icon" class="fas fa-sort"></i></th>
                         <th>Время добавления <i id="sort-icon" class="fas fa-sort-up"></i></th>
                         <th>Планируемая дата завершения <i id="sort-icon" class="fas fa-sort"></i></th>
-                        <th>Закрыта <i id="sort-icon" class="fas fa-sort"></i></th>
+                        <th>Завершена <i id="sort-icon" class="fas fa-sort"></i></th>
                     </tr>
                     <?php
                         $id = htmlspecialchars($_GET["id"]);
