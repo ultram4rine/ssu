@@ -7,6 +7,8 @@
     <link type="text/css" rel="stylesheet" href="public/css/global.css">
     <link type="text/css" rel="stylesheet" href="public/css/header.css">
     <link type="text/css" rel="stylesheet" href="public/css/form.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -58,6 +60,11 @@
             </div>
         </main>
     </div>
+    <script>
+        $(document).ready(function () {
+            $("#adduser").addClass("active");
+        });
+    </script>
 </body>
 
 </html>

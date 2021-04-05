@@ -86,6 +86,7 @@
     </div>
     <script>
         $(document).ready(function () {
+            $("#addtask").addClass("active");
             $("#empl").select2();
             $("#closing").datepicker({
                 dateFormat: "yy-mm-dd"
