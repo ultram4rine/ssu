@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $empl = htmlentities($mysqli->real_escape_string($_POST['empl']));
     $closing = htmlentities($mysqli->real_escape_string($_POST['closing']));
 
-    $result = $mysqli->query("SELECT name FROM tasks WHERE name == '$name'");
+    $result = $mysqli->query("SELECT name FROM tasks WHERE name = '$name'");
     if (!$result) {
         $res = $mysqli->query("INSERT INTO tasks VALUES(NULL, NOW(), '$empl', '$closing', NULL, '$name', '$desc')");
         if ($res) {

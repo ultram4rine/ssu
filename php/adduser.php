@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $root = isset($_POST['root']);
     $fullname = htmlentities($mysqli->real_escape_string($_POST['fullname']));
 
-    $result = $mysqli->query("SELECT username FROM users WHERE username == '$username'");
+    $result = $mysqli->query("SELECT username FROM users WHERE username = '$username'");
     if (!$result) {
         $res = $mysqli->query("INSERT INTO users VALUES(NULL, '$username', '$password_hash', '$root', '$fullname', NOW())");
         if ($res) {
