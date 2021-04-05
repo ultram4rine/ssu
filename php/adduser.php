@@ -11,6 +11,15 @@
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 </head>
 
+<?php
+    session_start();
+    if($_SESSION['user_id']){}
+    else{
+        header("location: login.php");
+    }
+    $user = $_SESSION['user_id'];
+?>
+
 <body>
     <div class="box">
         <?php echo file_get_contents("public/html/header.html"); ?>

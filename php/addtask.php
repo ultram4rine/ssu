@@ -17,6 +17,15 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 
+<?php
+    session_start();
+    if($_SESSION['user_id']){}
+    else{
+        header("location: login.php");
+    }
+    $user = $_SESSION['user_id'];
+?>
+
 <body>
     <div class="box">
         <?php echo file_get_contents("public/html/header.html"); ?>
