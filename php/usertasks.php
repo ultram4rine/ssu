@@ -36,7 +36,7 @@
                                 exit();
                             }
 
-                            $result = $mysqli->query("SELECT id, created_at, planned_closed_at, closed_at, name FROM tasks WHERE user_id = $id");
+                            $result = $mysqli->query("SELECT id, created_at, planned_closed_at, closed_at, name FROM tasks WHERE user_id = $id ORDER BY closed_at IS NOT NULL, closed_at, created_at DESC");
                             if (!$result){
                                 print("No content");
                             } else {
