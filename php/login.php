@@ -20,27 +20,15 @@
         <main>
             <div class="container">
                 <form action="login.php" method="POST">
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="username">Логин</label>
-                        </div>
-                        <div class="col-75">
-                            <input id="username" name="username" type="text" required="required" maxlength="50" />
-                        </div>
-                    </div>
+                    <label for="username"><b>Логин</b></label>
+                    <input id="username" name="username" type="text" required="required" maxlength="50"
+                        placeholder="Enter username" />
 
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="desc">Пароль</label>
-                        </div>
-                        <div class="col-75">
-                            <input id="password" name="password" type="password" required="required"></input>
-                        </div>
-                    </div>
+                    <label for="desc"><b>Пароль</b></label>
+                    <input id="password" name="password" type="password" required="required"
+                        placeholder="Enter password"></input>
 
-                    <div class="row">
-                        <input type="submit" value="Войти" />
-                    </div>
+                    <button type="submit">Войти</button>
                 </form>
             </div>
         </main>

@@ -32,6 +32,20 @@ input[type="submit"]:hover {
   background-color: #45a049;
 }
 
+button {
+  background-color: #4caf50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
 .col-25 {
   float: left;
   width: 25%;
