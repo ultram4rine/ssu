@@ -13,8 +13,11 @@
 
 <?php
     session_start();
-    if($_SESSION['user_id']){}
-    else{
+    if ($_SESSION['user_id']) {
+        if ($_SESSION['user_is_root']) {} else {
+            header("location: login.php");
+        }
+    } else {
         header("location: login.php");
     }
     $user = $_SESSION['user_id'];
