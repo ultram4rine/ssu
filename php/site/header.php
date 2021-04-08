@@ -18,6 +18,7 @@
 
     printf('
                 <a id="profile" href="/user.php?id=%s">Профиль</a>
+                <a id="logout" href="/logout.php">Выйти</a>
             </div>
         </header>', $user);
 ?>
