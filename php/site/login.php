@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['user_name'] = $row["name"];
                 $_SESSION['user_is_root'] = $row["root"];
                 $_SESSION['user_fullname'] = $row["full_name"];
-                header("location: usertasks.php?id=" . $row["id"]);
+                header("location: user.php?id=" . $row["id"]);
             } else {
                 print("<script>alert('Incorrect password');</script>");
             }
