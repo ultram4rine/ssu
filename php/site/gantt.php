@@ -54,9 +54,9 @@
                             usort($dates, "date_sort");
 
                             print("<tr>");
-                            print("<td></td>");
+                            print("<th style='cursor: default; background-color: #f2f2f2; color: black;'></th>");
                             foreach ($dates as $date) {
-                                printf("<td>%s</td>", $date);
+                                printf("<th style='cursor: default; background-color: #f2f2f2; color: black; font-weight: normal;'>%s</th>", $date);
                             }
                             print("</tr>");
 
