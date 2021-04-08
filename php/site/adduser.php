@@ -25,7 +25,7 @@
 
 <body>
     <div class="box">
-        <?php echo file_get_contents("public/html/header.html"); ?>
+        <?php include("header.php"); ?>
         <main>
             <div class="container">
                 <form action="adduser.php" method="POST">

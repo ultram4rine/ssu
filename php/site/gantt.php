@@ -7,6 +7,8 @@
     <link type="text/css" rel="stylesheet" href="public/css/global.css">
     <link type="text/css" rel="stylesheet" href="public/css/header.css">
     <link type="text/css" rel="stylesheet" href="public/css/table.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 </head>
 
 <?php
@@ -20,7 +22,7 @@
 
 <body>
     <div class="box">
-        <?php echo file_get_contents("public/html/header.html"); ?>
+        <?php include("header.php"); ?>
         <main>
             <div class="container">
                 <table id="gantt" style="overflow-y: auto;">
@@ -94,6 +96,11 @@
             </div>
         </main>
     </div>
+    <script>
+        $(document).ready(function () {
+            $("#chart").addClass("active");
+        });
+    </script>
 </body>
 
 </html>
