@@ -125,16 +125,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $empl = htmlentities($mysqli->real_escape_string($_POST['empl']));
     $closing = htmlentities($mysqli->real_escape_string($_POST['closing']));
 
-    $result = $mysqli->query("SELECT name FROM tasks WHERE name = '$name'");
-    if (!$result) {
-        $res = $mysqli->query("INSERT INTO tasks VALUES(NULL, NOW(), '$empl', '$closing', NULL, '$name', '$desc')");
-        if ($res) {
-            echo "<span style='color:blue;'>Данные добавлены</span>";
-        } else {
-            echo "<span style='color:blue;'>Пиздец '$mysqli->error'</span>";
-        }
+    $res = $mysqli->query("INSERT INTO tasks VALUES(NULL, NOW(), '$empl', '$closing', NULL, '$name', '$desc')");
+    if ($res) {
+        echo "<span style='color:blue;'>Данные добавлены</span>";
     } else {
-        print("<script>alert('Такая задача уже есть');</script>");
+        echo "<span style='color:blue;'>Пиздец '$mysqli->error'</span>";
     }
 
     $mysqli->close();
