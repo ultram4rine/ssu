@@ -23,7 +23,7 @@
 
 <body>
     <div class="box">
-        <?php echo file_get_contents("public/html/header.html"); ?>
+        <?php include("header.php"); ?>
         <main>
             <div class="container">
                 <table id="tasks">
@@ -71,6 +71,11 @@
     </div>
 
     <script src="public/js/sort.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#profile").addClass("active");
+        });
+    </script>
 </body>
 
 </html>
