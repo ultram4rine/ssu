@@ -35,7 +35,7 @@
                             exit();
                         }
 
-                        $result = $mysqli->query("SELECT t.created_at, t.planned_closed_at, t.name, u.full_name FROM tasks AS t JOIN users AS u ON t.user_id = u.id WHERE closed_at IS NULL ORDER BY t.planned_closed_at ASC, t.created_at");
+                        $result = $mysqli->query("SELECT t.id AS tid, t.created_at, t.planned_closed_at, t.name, u.id AS uid, u.full_name FROM tasks AS t JOIN users AS u ON t.user_id = u.id WHERE closed_at IS NULL ORDER BY t.planned_closed_at ASC, t.created_at");
                         if (!$result){
                             print("No content");
                         } else {
@@ -64,7 +64,7 @@
 
                             foreach ($result as $row) {
                                 print("<tr>");
-                                printf("<td>%s</td>", $row["full_name"] . " -> " . $row["name"]);
+                                printf("<td>%s</td>", "<a href='user.php?id=" . $row["uid"] . "'>" . $row["full_name"] . "</a>" . " -> " . "<a href='task.php?id=" . $row["tid"] . "'>" . $row["name"] . "</a>");
                                 $paint = false;
                                 foreach ($dates as $date) {
                                     if ($date == substr($row["created_at"], 0, -9)) {
