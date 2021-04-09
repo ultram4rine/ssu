@@ -36,18 +36,20 @@
                             }
 
                             $created_at;
+                            $user_id;
                             $user_full_name;
                             $planned_closed_at;
                             $closed_at;
                             $name;
                             $description;
 
-                            $result = $mysqli->query("SELECT t.created_at, t.planned_closed_at, t.closed_at, t.name, t.description, u.full_name FROM tasks AS t JOIN users AS u ON t.user_id = u.id WHERE t.id = $id");
+                            $result = $mysqli->query("SELECT t.created_at, t.planned_closed_at, t.closed_at, t.name, t.description, u.id, u.full_name FROM tasks AS t JOIN users AS u ON t.user_id = u.id WHERE t.id = $id");
                             if (!$result){
                                 print("No content");
                             } else {
                                 while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                                     $created_at = $row['created_at'];
+                                    $user_id = $row['id'];
                                     $user_full_name = $row['full_name'];
                                     $planned_closed_at = $row['planned_closed_at'];
                                     $closed_at = $row['closed_at'];
@@ -128,9 +130,13 @@
                         }
                     ?>
 
-                    <div class="row">
-                        <input type="submit" value="Завершить задачу" name="close" />
-                    </div>
+                    <?php
+                        if ($_SESSION['user_is_root'] || $user == $user_id) {
+                        echo '<div class="row">
+                                <input type="submit" value="Завершить задачу" name="close" />
+                            </div>';
+                        }
+                    ?>
 
                     <div class="row">
                         <input type="submit" value="Изменить задачу" name="change" />
