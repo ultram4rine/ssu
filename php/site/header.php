@@ -11,8 +11,13 @@
 
         if ($is_root) {
         print('
-            <a id="addtask" href="/addtask.php">Добавить задачу</a>
-            <a id="adduser" href="/adduser.php">Добавить пользователя</a>
+            <div class="dropdown">
+                <div class="dropbtn">Управление</div>
+                <div class="dropdown-content">
+                    <a id="addtask" class="droplnk" href="/addtask.php">Добавить задачу</a>
+                    <a id="adduser" class="droplnk" href="/adduser.php">Добавить пользователя</a>
+                </div>
+            </div>
         ');
     }
 
