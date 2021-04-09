@@ -94,19 +94,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $username = htmlentities($mysqli->real_escape_string($_POST['username']));
     $password_hash = password_hash(htmlentities($mysqli->real_escape_string($_POST['password'])), PASSWORD_DEFAULT);
-    $root = isset($_POST['root']);
+    $root = isset($_POST['root']) ? 1 : 0;
     $fullname = htmlentities($mysqli->real_escape_string($_POST['fullname']));
 
-    $result = $mysqli->query("SELECT username FROM users WHERE username = '$username'");
-    if (!$result) {
-        $res = $mysqli->query("INSERT INTO users VALUES(NULL, '$username', '$password_hash', '$root', '$fullname', NOW())");
-        if ($res) {
-            echo "<span style='color:blue;'>Данные добавлены</span>";
-        } else {
-            echo "<span style='color:blue;'>Пиздец '$mysqli->error'</span>";
-        }
+    $res = $mysqli->query("INSERT INTO users VALUES(NULL, '$username', '$password_hash', '$root', '$fullname', NOW())");
+    if ($res) {
+        echo "<span style='color:blue;'>Данные добавлены</span>";
     } else {
-        print("<script>alert('Пользователь уже зарегистрирован');</script>");
+        echo "<span style='color:blue;'>Пиздец '$mysqli->error'</span>";
     }
 
     $mysqli->close();
