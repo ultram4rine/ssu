@@ -134,13 +134,12 @@
                         if ($_SESSION['user_is_root'] || $user == $user_id) {
                         echo '<div class="row">
                                 <input type="submit" value="Завершить задачу" name="close" />
+                            </div>
+                            <div class="row">
+                                <input type="submit" value="Изменить задачу" name="change" />
                             </div>';
                         }
                     ?>
-
-                    <div class="row">
-                        <input type="submit" value="Изменить задачу" name="change" />
-                    </div>
                 </form>
             </div>
         </main>
