@@ -15,7 +15,7 @@
     session_start();
     if ($_SESSION['user_id']) {
         if ($_SESSION['user_is_root']) {} else {
-            header("location: login.php");
+            header("location: gantt.php");
         }
     } else {
         header("location: login.php");
