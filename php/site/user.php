@@ -19,7 +19,7 @@
     else {
         header("location: login.php");
     }
-    $user = $_SESSION['user_id'];
+    $user_id = $_SESSION['user_id'];
 ?>
 
 <body>
@@ -43,17 +43,19 @@
                         $full_name;
                         $last_access;
 
-                        $result = $mysqli->query("SELECT u.username, u.root, u.full_name, u.last_accessed_at, t.id, t.created_at, t.planned_closed_at, t.closed_at, t.name FROM users AS u JOIN tasks AS t ON u.id = t.user_id WHERE user_id = $id ORDER BY closed_at IS NOT NULL, closed_at, created_at DESC");
-                        if (!$result){
+                        $u_result = $mysqli->query("SELECT username, root, full_name, last_accessed_at FROM users WHERE id = $id");
+                        if (!$u_result){
                             print("No content");
                         } else {
-                            foreach ($result as $row) {
+                            foreach ($u_result as $row) {
                                 $username = $row["username"];
                                 $root = $row["root"];
                                 $full_name = $row["full_name"];
                                 $last_access = $row["last_accessed_at"];
                             }
                         }
+
+                        $t_result = $mysqli->query("SELECT id, created_at, planned_closed_at, closed_at, name FROM tasks WHERE user_id = $id ORDER BY closed_at IS NOT NULL, closed_at, created_at DESC");
 
                         $mysqli->close();
                     } else {
@@ -106,7 +108,7 @@
                         <th>Завершена <i id="sort-icon" class="fas fa-sort"></i></th>
                     </tr>
                     <?php
-                        foreach ($result as $row) {
+                        foreach ($t_result as $row) {
                             printf("<tr>");
                             printf("<td>%s</td>", $row["id"]);
                             printf("<td>%s</td>", $row["name"]);
@@ -122,11 +124,17 @@
     </div>
 
     <script src="public/js/sort.js"></script>
-    <script>
-        $(document).ready(function () {
-            $("#profile").addClass("active");
-        });
-    </script>
+    <?php
+    if ($id == $user_id) {
+        print('
+            <script>
+                $(document).ready(function () {
+                    $("#profile").addClass("active");
+                });
+            </script>
+        ');
+    }
+    ?>
 </body>
 
 </html>
