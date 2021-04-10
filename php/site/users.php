@@ -26,7 +26,7 @@
         <?php include("header.php"); ?>
         <main>
             <div class="container">
-                <table id="tasks">
+                <table id="users">
                     <tr>
                         <th>Идентификатор <i id="sort-icon" class="fas fa-sort-up"></i></th>
                         <th>Логин <i id="sort-icon" class="fas fa-sort"></i></th>
