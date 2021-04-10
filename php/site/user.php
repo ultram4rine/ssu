@@ -90,6 +90,15 @@
                             <?php printf('<input id="root" name="root" type="text" required="required" readonly value="%s" />', $root ? 'Да' : 'Нет'); ?>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="online">Время последнего входа</label>
+                        </div>
+                        <div class="col-75">
+                            <?php printf('<input id="online" name="online" type="text" required="required" readonly value="%s" />', $last_access); ?>
+                        </div>
+                    </div>
                 </form>
 
                 <div class="row">
