@@ -99,9 +99,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $res = $mysqli->query("INSERT INTO users VALUES(NULL, '$username', '$password_hash', '$root', '$fullname', NOW())");
     if ($res) {
-        echo "<span style='color:blue;'>Данные добавлены</span>";
+        echo "<script>alert('Пользователь добавлен');</script>";
     } else {
-        echo "<span style='color:blue;'>Пиздец '$mysqli->error'</span>";
+        echo "<script>alert('Ошибка');</script>";
     }
 
     $mysqli->close();

@@ -38,6 +38,7 @@
                         $result = $mysqli->query("SELECT t.id AS tid, t.created_at, t.planned_closed_at, t.name, u.id AS uid, u.full_name FROM tasks AS t JOIN users AS u ON t.user_id = u.id WHERE closed_at IS NULL ORDER BY t.planned_closed_at ASC, t.created_at");
                         if (!$result){
                             print("No content");
+                            exit();
                         } else {
                             $dates;
                             $i = 0;

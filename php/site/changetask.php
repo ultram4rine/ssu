@@ -64,6 +64,7 @@
                             $mysqli->close();
                         } else {
                             print("No content");
+                            exit();
                         }
                     ?>
 

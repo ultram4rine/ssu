@@ -61,6 +61,7 @@
                             $mysqli->close();
                         } else {
                             print("No content");
+                            exit();
                         }
                     ?>
                     <div class="row">
@@ -159,16 +160,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $res = $mysqli->query("UPDATE tasks SET name='$name', description='$desc', user_id='$empl', planned_closed_at='$closing' WHERE id='$id'");
         if ($res) {
-            echo "<span style='color:blue;'>Задача обновлена</span>";
+            echo "<script>alert('Задача обновлена');</script>";
         } else {
-            echo "<span style='color:blue;'>Пиздец '$mysqli->error'</span>";
+            echo "<script>alert('Ошибка');</script>";
         }
     } else if ($_POST["close"]) {
         $res = $mysqli->query("UPDATE tasks SET closed_at=CURRENT_DATE() WHERE id='$id'");
         if ($res) {
-            echo "<span style='color:blue;'>Задача закрыта</span>";
+            echo "<script>alert('Задача закрыта');</script>";
         } else {
-            echo "<span style='color:blue;'>Пиздец '$mysqli->error'</span>";
+            echo "<script>alert('Ошибка');</script>";
         }
     }
 
