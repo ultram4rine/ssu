@@ -26,7 +26,7 @@
         <?php include("header.php"); ?>
         <main>
             <div class="container">
-                <form action="changetask.php" method="POST">
+                <form action="changetask.php" method="PUT">
                     <?php
                         $id = htmlspecialchars($_GET["id"]);
                         if(!empty($id)) {
@@ -150,7 +150,7 @@
 </html>
 
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "PUT") {
     require_once 'conn.php';
 
     $mysqli = new mysqli($host, $user, $password, $database);
@@ -160,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    if ($_POST("change")) {
+    if ($_PUT("change")) {
         $name = htmlentities($mysqli->real_escape_string($_POST['name']));
         $desc = htmlentities($mysqli->real_escape_string($_POST['desc']));
         $empl = htmlentities($mysqli->real_escape_string($_POST['empl']));
@@ -172,7 +172,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             echo "<span style='color:blue;'>Пиздец '$mysqli->error'</span>";
         }
-    } else if ($_POST("close")) {
+    } else if ($_PUT("close")) {
         $res = $mysqli->query("UPDATE tasks SET closed_at=CURRENT_DATE() WHERE id='$id'");
         if ($res) {
             echo "<span style='color:blue;'>Задача закрыта</span>";
