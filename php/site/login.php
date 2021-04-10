@@ -59,10 +59,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         while($row = $result->fetch_array()){
             if (password_verify($password, $row["password_hash"])) {
-                $_SESSION['user_id'] = $row["id"];
+                $id = $row["id"];
+                $_SESSION['user_id'] = $id;
                 $_SESSION['user_name'] = $row["name"];
                 $_SESSION['user_is_root'] = $row["root"];
                 $_SESSION['user_fullname'] = $row["full_name"];
+                $mysqli->query("UPDATE users SET last_accessed_at = NOW() WHERE id = $id");
                 header("location: user.php?id=" . $row["id"]);
             } else {
                 print("<script>alert('Incorrect password');</script>");
