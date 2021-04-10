@@ -147,3 +147,34 @@
 </body>
 
 </html>
+
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    require_once 'conn.php';
+
+    $mysqli = new mysqli($host, $user, $password, $database);
+
+    if ($mysqli->connect_errno) {
+        printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+        exit();
+    }
+
+    $id = htmlentities($mysqli->real_escape_string($_POST['id']));
+    $username = htmlentities($mysqli->real_escape_string($_POST['username']));
+    if ($_POST['password'] != "") {
+        $password_hash = password_hash(htmlentities($mysqli->real_escape_string($_POST['password'])), PASSWORD_DEFAULT);
+    }
+    $root = isset($_POST['root']) ? 1 : 0;
+    $fullname = htmlentities($mysqli->real_escape_string($_POST['fullname']));
+
+    $query = $_POST['password'] != "" ? "UPDATE users SET username='$username', password_hash='$password_hash', root='$root', full_name='$fullname' WHERE id='$id'" : "UPDATE users SET username='$username', root='$root', full_name='$fullname' WHERE id='$id'";
+    $res = $mysqli->query($query);
+    if ($res) {
+        echo "<script>alert('Данные пользователя обновлены');</script>";
+    } else {
+        echo "<script>alert('Ошибка');</script>";
+    }
+
+    $mysqli->close();
+}
+?>
