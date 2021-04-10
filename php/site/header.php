@@ -1,6 +1,4 @@
 <?php
-    session_start();
-
     $user = $_SESSION['user_id'];
     $is_root = $_SESSION['user_is_root'];
 
