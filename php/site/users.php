@@ -14,14 +14,14 @@
 
 <?php
     session_start();
-    if($_SESSION['user_id']) {
+    if ($_SESSION['user_id']) {
         if ($_SESSION['user_is_root']) {} else {
             header("location: gantt.php");
         }
     } else {
         header("location: login.php");
     }
-    $user = $_SESSION['user_id'];
+    $s_user_id = $_SESSION['user_id'];
 ?>
 
 <body>

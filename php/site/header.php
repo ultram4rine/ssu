@@ -1,5 +1,5 @@
 <?php
-    $user = $_SESSION['user_id'];
+    $s_user_id = $_SESSION['user_id'];
     $is_root = $_SESSION['user_is_root'];
 
     print('
@@ -25,5 +25,5 @@
                 <a id="profile" href="/user.php?id=%s">Профиль</a>
                 <a id="logout" href="/logout.php">Выйти</a>
             </div>
-        </header>', $user);
+        </header>', $s_user_id);
 ?>

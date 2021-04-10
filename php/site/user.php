@@ -15,11 +15,11 @@
 
 <?php
     session_start();
-    if($_SESSION['user_id']) {}
+    if ($_SESSION['user_id']) {}
     else {
         header("location: login.php");
     }
-    $user_id = $_SESSION['user_id'];
+    $s_user_id = $_SESSION['user_id'];
 ?>
 
 <body>
@@ -134,7 +134,7 @@
 
     <script src="public/js/sort.js"></script>
     <?php
-    if ($id == $user_id) {
+    if ($id == $s_user_id) {
         print('
             <script>
                 $(document).ready(function () {

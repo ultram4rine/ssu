@@ -18,7 +18,7 @@
     } else {
         header("location: login.php");
     }
-    $user = $_SESSION['user_id'];
+    $s_user_id = $_SESSION['user_id'];
 ?>
 
 <body>
@@ -134,7 +134,7 @@
                     ?>
 
                     <?php
-                        if ($_SESSION['user_is_root'] || $user == $user_id) {
+                        if ($_SESSION['user_is_root'] || $s_user_id == $user_id) {
                         echo '<div class="row">
                                 <input type="submit" value="Изменить задачу" name="change" />
                                 <input style="margin-right: 10px;" type="submit" value="Завершить задачу" name="close" />

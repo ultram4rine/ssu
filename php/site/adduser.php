@@ -20,7 +20,7 @@
     } else {
         header("location: login.php");
     }
-    $user = $_SESSION['user_id'];
+    $s_user_id = $_SESSION['user_id'];
 ?>
 
 <body>
