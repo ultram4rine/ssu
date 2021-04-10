@@ -59,7 +59,7 @@
                                 printf("<td>%s</td>", $row["full_name"]);
                                 printf("<td>%s</td>", $row["root"] ? 'Да' : 'Нет');
                                 printf("<td>%s</td>", $row["last_accessed_at"]);
-                                printf("<td><a href='changeuser.php?id=%s'><i class='fas fa-edit'></i></a> <a href='deleteuser.php?id=%s'><i class='fas fa-trash'></i></a></td>", $row["tid"], $row["tid"]);
+                                printf("<td><a href='changeuser.php?id=%s'><i class='fas fa-edit'></i></a> <a href='deleteuser.php?id=%s'><i class='fas fa-trash'></i></a></td>", $row["id"], $row["id"]);
                                 printf("</tr>");
                             }
                         }
