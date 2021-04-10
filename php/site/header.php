@@ -14,6 +14,8 @@
             <div class="dropdown">
                 <div class="dropbtn">Управление</div>
                 <div class="dropdown-content">
+                    <a id="tasks" class="droplnk" href="/tasks.php">Задачи</a>
+                    <a id="users" class="droplnk" href="/users.php">Пользователи</a>
                     <a id="addtask" class="droplnk" href="/addtask.php">Добавить задачу</a>
                     <a id="adduser" class="droplnk" href="/adduser.php">Добавить пользователя</a>
                 </div>
