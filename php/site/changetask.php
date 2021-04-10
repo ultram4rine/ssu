@@ -26,7 +26,7 @@
         <?php include("header.php"); ?>
         <main>
             <div class="container">
-                <form action="changetask.php" method="PUT">
+                <form action="task.php" method="POST">
                     <?php
                         $id = htmlspecialchars($_GET["id"]);
                         if(!empty($id)) {
@@ -66,6 +66,9 @@
                             print("No content");
                         }
                     ?>
+
+                    <?php printf('<input id="id" name="id" type="hidden" required="required" value="%s" />', $id); ?>
+
                     <div class="row">
                         <div class="col-25">
                             <label for="name">Заголовок</label>
@@ -148,39 +151,3 @@
 </body>
 
 </html>
-
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "PUT") {
-    require_once 'conn.php';
-
-    $mysqli = new mysqli($host, $user, $password, $database);
-
-    if ($mysqli->connect_errno) {
-        printf("Соединение не удалось: %s\n", $mysqli->connect_error);
-        exit();
-    }
-
-    if ($_PUT("change")) {
-        $name = htmlentities($mysqli->real_escape_string($_POST['name']));
-        $desc = htmlentities($mysqli->real_escape_string($_POST['desc']));
-        $empl = htmlentities($mysqli->real_escape_string($_POST['empl']));
-        $closing = htmlentities($mysqli->real_escape_string($_POST['closing']));
-
-        $res = $mysqli->query("UPDATE tasks SET name='$name', description='$desc', user_id='$empl', planned_closed_at='$closing' WHERE id='$id'");
-        if ($res) {
-            echo "<span style='color:blue;'>Задача обновлена</span>";
-        } else {
-            echo "<span style='color:blue;'>Пиздец '$mysqli->error'</span>";
-        }
-    } else if ($_PUT("close")) {
-        $res = $mysqli->query("UPDATE tasks SET closed_at=CURRENT_DATE() WHERE id='$id'");
-        if ($res) {
-            echo "<span style='color:blue;'>Задача закрыта</span>";
-        } else {
-            echo "<span style='color:blue;'>Пиздец '$mysqli->error'</span>";
-        }
-    }
-
-    $mysqli->close();
-}
-?>

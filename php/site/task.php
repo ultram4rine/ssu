@@ -36,18 +36,20 @@
                             }
 
                             $created_at;
+                            $user_id;
                             $user_full_name;
                             $planned_closed_at;
                             $closed_at;
                             $name;
                             $description;
 
-                            $result = $mysqli->query("SELECT t.created_at, t.planned_closed_at, t.closed_at, t.name, t.description, u.full_name FROM tasks AS t JOIN users AS u ON t.user_id = u.id WHERE t.id = $id");
+                            $result = $mysqli->query("SELECT t.created_at, t.planned_closed_at, t.closed_at, t.name, t.description, u.id, u.full_name FROM tasks AS t JOIN users AS u ON t.user_id = u.id WHERE t.id = $id");
                             if (!$result){
                                 print("No content");
                             } else {
                                 while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                                     $created_at = $row['created_at'];
+                                    $user_id = $row['id'];
                                     $user_full_name = $row['full_name'];
                                     $planned_closed_at = $row['planned_closed_at'];
                                     $closed_at = $row['closed_at'];
@@ -120,12 +122,56 @@
                     ?>
 
                 </form>
-                <div class="row">
-                    <?php printf('<input type="submit" onclick="window.location.href=\'changetask.php?id=%s\';" value="Изменить" />', $id) ?>
-                </div>
+                <?php
+                    if ($_SESSION["user_is_root"] || $s_user_id == $user_id) {
+                        printf(
+                            '<div class="row">
+                                <input type="submit" onclick="window.location.href=\'changetask.php?id=%s\';" value="Изменить" />
+                            </div>', $id
+                        );
+                    }
+                ?>
             </div>
         </main>
     </div>
 </body>
 
 </html>
+
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    require_once 'conn.php';
+
+    $mysqli = new mysqli($host, $user, $password, $database);
+
+    if ($mysqli->connect_errno) {
+        printf("Соединение не удалось: %s\n", $mysqli->connect_error);
+        exit();
+    }
+
+    $id = htmlentities($mysqli->real_escape_string($_POST['id']));
+
+    if ($_POST["change"]) {
+        $name = htmlentities($mysqli->real_escape_string($_POST['name']));
+        $desc = htmlentities($mysqli->real_escape_string($_POST['desc']));
+        $empl = htmlentities($mysqli->real_escape_string($_POST['empl']));
+        $closing = htmlentities($mysqli->real_escape_string($_POST['closing']));
+
+        $res = $mysqli->query("UPDATE tasks SET name='$name', description='$desc', user_id='$empl', planned_closed_at='$closing' WHERE id='$id'");
+        if ($res) {
+            echo "<span style='color:blue;'>Задача обновлена</span>";
+        } else {
+            echo "<span style='color:blue;'>Пиздец '$mysqli->error'</span>";
+        }
+    } else if ($_POST["close"]) {
+        $res = $mysqli->query("UPDATE tasks SET closed_at=CURRENT_DATE() WHERE id='$id'");
+        if ($res) {
+            echo "<span style='color:blue;'>Задача закрыта</span>";
+        } else {
+            echo "<span style='color:blue;'>Пиздец '$mysqli->error'</span>";
+        }
+    }
+
+    $mysqli->close();
+}
+?>
