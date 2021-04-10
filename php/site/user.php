@@ -119,8 +119,8 @@
                     <?php
                         foreach ($t_result as $row) {
                             printf("<tr>");
-                            printf("<td>%s</td>", $row["id"]);
-                            printf("<td>%s</td>", $row["name"]);
+                            printf("<td><a href='task.php?id=%s'>%s</a></td>", $row["id"], $row["id"]);
+                            printf("<td><a href='task.php?id=%s'>%s</a></td>", $row["id"], $row["name"]);
                             printf("<td>%s</td>", $row["created_at"]);
                             printf("<td>%s</td>", $row["planned_closed_at"]);
                             printf("<td>%s</td>", empty($row["closed_at"]) ? 'Нет' : $row["closed_at"]);
