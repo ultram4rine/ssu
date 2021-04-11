@@ -46,6 +46,7 @@
                         $u_result = $mysqli->query("SELECT username, root, full_name, last_accessed_at FROM users WHERE id = $id");
                         if (!$u_result){
                             print("No content");
+                            exit();
                         } else {
                             foreach ($u_result as $row) {
                                 $username = $row["username"];
@@ -57,9 +58,20 @@
 
                         $t_result = $mysqli->query("SELECT id, created_at, planned_closed_at, closed_at, name FROM tasks WHERE user_id = $id ORDER BY closed_at IS NOT NULL, closed_at, created_at DESC");
 
+                        $ended_tasks = 0;
+                        $open_tasks = 0;
+                        foreach($t_result as $row) {
+                            if (!empty($row["closed_at"])) {
+                                $ended_tasks++;
+                            } else {
+                                $open_tasks++;
+                            }
+                        }
+
                         $mysqli->close();
                     } else {
                         print("No content");
+                        exit();
                     }
                 ?>
 
@@ -105,6 +117,24 @@
                     <?php printf('<input type="submit" onclick="window.location.href=\'changeuser.php?id=%s\';" value="Изменить" />', $id) ?>
                 </div>
 
+                <div class="row">
+                    <div class="col-25">
+                        <label for="opened">Количество открытых задач</label>
+                    </div>
+                    <div class="col-75">
+                        <?php printf('<input id="opened" name="opened" type="text" readonly value="%s" />', $open_tasks); ?>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-25">
+                        <label for="ended">Количество завершенных задач</label>
+                    </div>
+                    <div class="col-75">
+                        <?php printf('<input id="ended" name="ended" type="text" readonly value="%s" />', $ended_tasks); ?>
+                    </div>
+                </div>
+
                 <div class="col-25">
                     <label for="name">Задачи</label>
                 </div>
@@ -117,14 +147,16 @@
                         <th>Завершена <i id="sort-icon" class="fas fa-sort"></i></th>
                     </tr>
                     <?php
-                        foreach ($t_result as $row) {
-                            printf("<tr>");
-                            printf("<td><a href='task.php?id=%s'>%s</a></td>", $row["id"], $row["id"]);
-                            printf("<td><a href='task.php?id=%s'>%s</a></td>", $row["id"], $row["name"]);
-                            printf("<td>%s</td>", $row["created_at"]);
-                            printf("<td>%s</td>", $row["planned_closed_at"]);
-                            printf("<td>%s</td>", empty($row["closed_at"]) ? 'Нет' : $row["closed_at"]);
-                            printf("</tr>");
+                        if ($t_result) {
+                            foreach ($t_result as $row) {
+                                printf("<tr>");
+                                printf("<td><a href='task.php?id=%s'>%s</a></td>", $row["id"], $row["id"]);
+                                printf("<td><a href='task.php?id=%s'>%s</a></td>", $row["id"], $row["name"]);
+                                printf("<td>%s</td>", $row["created_at"]);
+                                printf("<td>%s</td>", $row["planned_closed_at"]);
+                                printf("<td>%s</td>", empty($row["closed_at"]) ? 'Нет' : $row["closed_at"]);
+                                printf("</tr>");
+                            }
                         }
                     ?>
                 </table>
