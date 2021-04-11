@@ -5,33 +5,37 @@
     <meta charset="UTF-8">
     <title>Вход</title>
     <link type="text/css" rel="stylesheet" href="public/css/global.css">
-    <link type="text/css" rel="stylesheet" href="public/css/form.css">
+    <link type="text/css" rel="stylesheet" href="public/css/login.css">
 </head>
 
 <?php
     session_start();
     if($_SESSION['user_id']){
-        header("location: usertasks.php?id=" . $_SESSION['user_id']);
+        header("location: user.php?id=" . $_SESSION['user_id']);
     }
 ?>
 
 <body>
     <div class="box">
-        <main>
-            <div class="container">
+        <div class="container">
+            <div class="wrap">
                 <form action="login.php" method="POST">
-                    <label for="username"><b>Логин</b></label>
-                    <input id="username" name="username" type="text" required="required" maxlength="50"
-                        placeholder="Enter username" />
+                    <div class="input-wrap">
+                        <input id="username" name="username" type="text" required="required" maxlength="50"
+                            placeholder="Логин" />
+                    </div>
 
-                    <label for="desc"><b>Пароль</b></label>
-                    <input id="password" name="password" type="password" required="required"
-                        placeholder="Enter password"></input>
+                    <div class="input-wrap">
+                        <input id="password" name="password" type="password" required="required"
+                            placeholder="Пароль"></input>
+                    </div>
 
-                    <button type="submit">Войти</button>
+                    <div class="input-wrap">
+                        <button type="submit">Войти</button>
+                    </div>
                 </form>
             </div>
-        </main>
+        </div>
     </div>
 </body>
 
