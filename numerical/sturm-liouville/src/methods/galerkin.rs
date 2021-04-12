@@ -1,1 +1,3 @@
-pub fn galerkin_method() -> Vec<f64> {}
+pub fn galerkin_method(q: fn(f64) -> f64) -> f64 {
+    0.0
+}
