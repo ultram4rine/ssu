@@ -5,8 +5,19 @@ use crate::methods::galerkin::galerkin_method;
 use crate::methods::newton::newton_method;
 use crate::methods::shooting::shooting_method;
 
+/// Left boundary condition.
+fn u0() -> f64 {
+    0.0
+}
+
+/// Right boundary condition.
+fn ul(l: f64) -> f64 {
+    0.0
+}
+
+/// A potential.
 fn q(x: f64) -> f64 {
-    x.sin()
+    0.0
 }
 
 fn main() {
