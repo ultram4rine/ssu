@@ -1,6 +1,6 @@
 /// Replace Sturm–Liouville equation with finding eigenvalues
 /// of matrix by finite difference approximation.
-pub fn fdm(q: fn(f64) -> f64, u0: fn() -> f64, ul: fn(f64) -> f64, mut N: i64) -> f64 {
+pub fn fdm(q: fn(f64) -> f64, u0: fn() -> f64, ul: fn(f64) -> f64, N: i64) -> f64 {
     let h = 1. / (N as f64);
     let mut A = vec![];
 
