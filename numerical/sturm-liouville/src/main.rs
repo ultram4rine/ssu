@@ -1,4 +1,4 @@
-#![allow(warnings, unused)]
+#![allow(non_snake_case, unused_imports, unused_variables, dead_code)]
 
 mod methods;
 
