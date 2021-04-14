@@ -1,3 +1,5 @@
+#![allow(warnings, unused)]
+
 mod methods;
 
 use crate::methods::finite_difference::fdm;
