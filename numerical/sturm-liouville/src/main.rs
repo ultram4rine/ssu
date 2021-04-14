@@ -21,5 +21,5 @@ fn q(x: f64) -> f64 {
 }
 
 fn main() {
-    println!("{:?}", shooting_method(q));
+    println!("{:?}", fdm(q, u0, ul, 4));
 }
