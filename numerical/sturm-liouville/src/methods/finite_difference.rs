@@ -18,7 +18,7 @@ pub fn fdm(q: fn(f64) -> f64, u0: fn() -> f64, ul: fn(f64) -> f64, mut N: i64) -
     }
 
     let poly = |lambda| D(A.clone(), N.clone() - 1, h.clone(), lambda);
-    let lambda = parabola_method(poly);
+    let lambda = parabola_method(poly, 2., 3., 5., 1e-8);
     println!("{}", poly(lambda));
     lambda
 }
@@ -39,13 +39,10 @@ fn D(A: Vec<Vec<f64>>, m: i64, h: f64, lambda: f64) -> f64 {
     }
 }
 
-fn parabola_method<F>(f: F) -> f64
+fn parabola_method<F>(f: F, mut x1: f64, mut x2: f64, mut x3: f64, eps: f64) -> f64
 where
     F: Fn(f64) -> f64,
 {
-    let mut x1: f64 = 2.;
-    let mut x2: f64 = 3.;
-    let mut x3: f64 = 5.;
     let mut xn: f64 = 0.;
 
     // divided differences.
@@ -69,7 +66,7 @@ where
         xn = x3 + z;
 
         // Garwick technique. While |xn+1 - xn| decreases, continue the calculation.
-        if (xn - x3).abs() < 1e-8 {
+        if (xn - x3).abs() < eps {
             cond = true;
         }
         if cond && (xn - x3).abs() > discrepancy {
