@@ -1,5 +1,3 @@
-use partial_application::partial;
-
 /// Replace Sturm–Liouville equation with finding eigenvalues
 /// of matrix by finite difference approximation.
 pub fn fdm(q: fn(f64) -> f64, u0: fn() -> f64, ul: fn(f64) -> f64, mut N: i64) -> f64 {
@@ -20,7 +18,7 @@ pub fn fdm(q: fn(f64) -> f64, u0: fn() -> f64, ul: fn(f64) -> f64, mut N: i64) -
         }
     }
 
-    let poly = partial!(D => A, N-1, h, _);
+    let poly = move |lambda| D(A, N - 1, h, lambda);
     println!("{}", poly(9.37));
     0.0
 }
