@@ -43,17 +43,20 @@ fn parabola_method<F>(f: F) -> f64
 where
     F: Fn(f64) -> f64,
 {
-    let mut x1 = 2.;
-    let mut x2 = 3.;
-    let mut x3 = 5.;
-    let mut xn = 0.;
+    let mut x1: f64 = 2.;
+    let mut x2: f64 = 3.;
+    let mut x3: f64 = 5.;
+    let mut xn: f64 = 0.;
 
     // divided differences.
     let fst_div_diff = |x1, x2| (f(x1) - f(x2)) / (x1 - x2);
     let snd_div_diff = |x1, x2, x3| (fst_div_diff(x1, x2) - fst_div_diff(x2, x3)) / (x1 - x3);
 
+    let mut cond = false;
+    let mut discrepancy = (x3 - x2).abs();
+
     // number of iterations.
-    let n = 20;
+    let n = 1000;
     for _ in 0..n {
         let a = snd_div_diff(x3, x2, x1);
         let b = a * (x3 - x2) + fst_div_diff(x3, x2);
@@ -65,14 +68,19 @@ where
         let z = if z1.abs() < z2.abs() { z1 } else { z2 };
         xn = x3 + z;
 
-        // if xn close to answer break the loop and return.
-        if f(xn).abs() < 1e-8 {
+        // Garwick technique. While |xn+1 - xn| decreases, continue the calculation.
+        if (xn - x3).abs() < 1e-8 {
+            cond = true;
+        }
+        if cond && (xn - x3).abs() > discrepancy {
             break;
         }
 
         x1 = x2;
         x2 = x3;
         x3 = xn;
+
+        discrepancy = (xn - x3).abs();
     }
 
     xn
