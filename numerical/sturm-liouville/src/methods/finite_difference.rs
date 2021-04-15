@@ -23,7 +23,10 @@ pub fn fdm(q: fn(f64) -> f64, u0: fn() -> f64, ul: fn(f64) -> f64, N: i64) -> f6
             lambda,
             A.clone(),
             h,
-            A[(N - 2) as usize][(N - 2) as usize] - h.powi(2) * lambda,
+            {
+                let i = (N - 2) as usize;
+                A[i][i] - h.powi(2) * lambda
+            },
             1.,
         )
     };
