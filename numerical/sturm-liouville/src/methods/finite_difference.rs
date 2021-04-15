@@ -17,24 +17,46 @@ pub fn fdm(q: fn(f64) -> f64, u0: fn() -> f64, ul: fn(f64) -> f64, N: i64) -> f6
         }
     }
 
-    let poly = |lambda| D(A.clone(), N.clone() - 1, h.clone(), lambda);
+    let poly = |lambda| {
+        D(
+            N - 1,
+            lambda,
+            A.clone(),
+            h,
+            A[(N - 2) as usize][(N - 2) as usize] - h.powi(2) * lambda,
+            1.,
+        )
+    };
     let lambda = parabola_method(poly, 2., 3., 5., 1e-8);
     println!("{}", poly(lambda));
     lambda
 }
 
-/// Recurrent formula for the characteristic polynomial.
-fn D(A: Vec<Vec<f64>>, m: i64, h: f64, lambda: f64) -> f64 {
+/// Recurrent formula for the characteristic polynomial (tail recursion).
+fn D(m: i64, lambda: f64, A: Vec<Vec<f64>>, h: f64, val: f64, prev: f64) -> f64 {
     match m {
-        0 => 1.0,
+        0 => prev,
         1 => {
-            (A[(m - 1) as usize][(m - 1) as usize] - h * h * lambda)
-                * D(A.clone(), m - 1, h, lambda)
+            let i = (m - 1) as usize;
+            D(
+                m - 1,
+                lambda,
+                A.clone(),
+                h,
+                (A[i][i] - h.powi(2) * lambda) * val,
+                val,
+            )
         }
         _ => {
             let i = (m - 1) as usize;
-            (A[i][i] - h * h * lambda) * D(A.clone(), m - 1, h, lambda)
-                - A[i][i - 1] * A[i - 1][i] * D(A.clone(), m - 2, h, lambda)
+            D(
+                m - 1,
+                lambda,
+                A.clone(),
+                h,
+                (A[i][i] - h.powi(2) * lambda) * val - A[i][i - 1] * A[i - 1][i] * prev,
+                val,
+            )
         }
     }
 }
