@@ -23,5 +23,8 @@ fn q(x: f64) -> f64 {
 }
 
 fn main() {
-    println!("{:?}", fdm(q, u0, ul, 4));
+    let spectrum = fdm(q, u0, ul, 64);
+    spectrum.into_iter().for_each(|lambda| {
+        println!("{}", lambda);
+    })
 }

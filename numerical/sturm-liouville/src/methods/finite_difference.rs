@@ -1,6 +1,6 @@
 /// Replace Sturm–Liouville equation with finding eigenvalues
 /// of matrix by finite difference approximation.
-pub fn fdm(q: fn(f64) -> f64, u0: fn() -> f64, ul: fn(f64) -> f64, N: i64) -> f64 {
+pub fn fdm(q: fn(f64) -> f64, u0: fn() -> f64, ul: fn(f64) -> f64, N: i64) -> Vec<f64> {
     let h = 1. / (N as f64);
     let mut A = vec![];
 
@@ -30,9 +30,20 @@ pub fn fdm(q: fn(f64) -> f64, u0: fn() -> f64, ul: fn(f64) -> f64, N: i64) -> f6
             1.,
         )
     };
-    let lambda = parabola_method(poly, 2., 3., 5., 1e-8);
-    println!("{}", poly(lambda));
-    lambda
+
+    let mut spectrum = vec![];
+    for n in 1..=5 {
+        let lambda = parabola_method(
+            poly,
+            8. * (n as f64).powi(2),
+            9. * (n as f64).powi(2),
+            10. * (n as f64).powi(2),
+            1e-8,
+        );
+        spectrum.push(lambda);
+    }
+
+    spectrum
 }
 
 /// Recurrent formula for the characteristic polynomial (tail recursion).
