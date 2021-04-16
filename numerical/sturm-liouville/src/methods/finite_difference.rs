@@ -95,8 +95,9 @@ where
         let b = a * (x3 - x2) + fst_div_diff(x3, x2);
         let c = f(x3);
 
-        let z1 = (-b + (b.powf(2.) - 4. * a * c).sqrt()) / (2. * a);
-        let z2 = (-b - (b.powf(2.) - 4. * a * c).sqrt()) / (2. * a);
+        let disc = b.powf(2.) - 4. * a * c;
+        let z1 = (-b + disc.sqrt()) / (2. * a);
+        let z2 = (-b - disc.sqrt()) / (2. * a);
 
         let z = if z1.abs() < z2.abs() { z1 } else { z2 };
         xn = x3 + z;
