@@ -33,7 +33,7 @@ pub fn fdm(q: fn(f64) -> f64, u0: fn() -> f64, ul: fn(f64) -> f64, N: i64) -> Ve
 
     let mut spectrum = vec![];
     for n in 1..=5 {
-        let lambda = parabola_method(
+        let lambda = muller_method(
             poly,
             8. * (n as f64).powi(2),
             9. * (n as f64).powi(2),
@@ -75,7 +75,7 @@ fn D(m: i64, lambda: f64, A: Vec<Vec<f64>>, h: f64, val: f64, prev: f64) -> f64 
     }
 }
 
-fn parabola_method<F>(f: F, mut x1: f64, mut x2: f64, mut x3: f64, eps: f64) -> f64
+fn muller_method<F>(f: F, mut x1: f64, mut x2: f64, mut x3: f64, eps: f64) -> f64
 where
     F: Fn(f64) -> f64,
 {
@@ -91,16 +91,18 @@ where
     // number of iterations.
     let n = 1000;
     for _ in 0..n {
-        let a = snd_div_diff(x3, x2, x1);
-        let b = a * (x3 - x2) + fst_div_diff(x3, x2);
-        let c = f(x3);
+        let w = fst_div_diff(x3, x2) + fst_div_diff(x3, x1) - fst_div_diff(x2, x1);
 
-        let disc = b.powf(2.) - 4. * a * c;
-        let z1 = (-b + disc.sqrt()) / (2. * a);
-        let z2 = (-b - disc.sqrt()) / (2. * a);
+        let denom1 = w + (w.powi(2) - 4. * f(x3) * snd_div_diff(x3, x2, x1)).sqrt();
+        let denom2 = w - (w.powi(2) - 4. * f(x3) * snd_div_diff(x3, x2, x1)).sqrt();
 
-        let z = if z1.abs() < z2.abs() { z1 } else { z2 };
-        xn = x3 + z;
+        let denom = if denom1.abs() > denom2.abs() {
+            denom1
+        } else {
+            denom2
+        };
+
+        xn = x3 - 2. * f(x3) / denom;
 
         // Garwick technique. While |xn+1 - xn| decreases, continue the calculation.
         if (xn - x3).abs() < eps {
