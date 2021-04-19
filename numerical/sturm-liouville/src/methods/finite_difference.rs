@@ -7,7 +7,7 @@
 /// * `l` - End of the segment.
 /// * `N` - Number of intervals of the grid.
 pub fn fdm(q: fn(f64) -> f64, l: f64, N: i64) -> Vec<f64> {
-    let h = 1. / (N as f64);
+    let h = l / (N as f64);
     let mut A = vec![];
 
     for i in 0..N - 1 {
@@ -41,9 +41,9 @@ pub fn fdm(q: fn(f64) -> f64, l: f64, N: i64) -> Vec<f64> {
     for n in 1..=5 {
         let lambda = muller_method(
             poly,
-            8. * (n as f64).powi(2),
-            9. * (n as f64).powi(2),
-            10. * (n as f64).powi(2),
+            1. * (n as f64).powi(2),
+            2. * (n as f64).powi(2),
+            3. * (n as f64).powi(2),
             1e-8,
         );
         spectrum.push(lambda);
@@ -111,7 +111,7 @@ where
     let mut discrepancy = (x3 - x2).abs();
 
     // number of iterations.
-    let n = 1000;
+    let n = 100;
     for _ in 0..n {
         let w = fst_div_diff(x3, x2) + fst_div_diff(x3, x1)
             - fst_div_diff(x2, x1);
