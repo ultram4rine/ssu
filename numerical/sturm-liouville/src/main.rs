@@ -1,4 +1,9 @@
-#![allow(non_snake_case, unused_imports, unused_variables, dead_code)]
+#![allow(
+    non_snake_case,
+    unused_imports,
+    unused_variables,
+    dead_code
+)]
 
 mod methods;
 
@@ -23,7 +28,7 @@ fn q(x: f64) -> f64 {
 }
 
 fn main() {
-    let spectrum = fdm(q, u0, ul, 64);
+    let spectrum = fdm(q, u0, ul, 128);
     spectrum.into_iter().for_each(|lambda| {
         println!("{}", lambda);
     })

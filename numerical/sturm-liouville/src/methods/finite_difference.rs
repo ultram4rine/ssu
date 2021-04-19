@@ -1,6 +1,11 @@
 /// Replace Sturm–Liouville equation with finding eigenvalues
 /// of matrix by finite difference approximation.
-pub fn fdm(q: fn(f64) -> f64, u0: fn() -> f64, ul: fn(f64) -> f64, N: i64) -> Vec<f64> {
+pub fn fdm(
+    q: fn(f64) -> f64,
+    u0: fn() -> f64,
+    ul: fn(f64) -> f64,
+    N: i64,
+) -> Vec<f64> {
     let h = 1. / (N as f64);
     let mut A = vec![];
 
@@ -47,7 +52,14 @@ pub fn fdm(q: fn(f64) -> f64, u0: fn() -> f64, ul: fn(f64) -> f64, N: i64) -> Ve
 }
 
 /// Recurrent formula for the characteristic polynomial (tail recursion).
-fn D(m: i64, lambda: f64, A: Vec<Vec<f64>>, h: f64, val: f64, prev: f64) -> f64 {
+fn D(
+    m: i64,
+    lambda: f64,
+    A: Vec<Vec<f64>>,
+    h: f64,
+    val: f64,
+    prev: f64,
+) -> f64 {
     match m {
         0 => prev,
         1 => {
@@ -68,14 +80,21 @@ fn D(m: i64, lambda: f64, A: Vec<Vec<f64>>, h: f64, val: f64, prev: f64) -> f64 
                 lambda,
                 A.clone(),
                 h,
-                (A[i][i] - h.powi(2) * lambda) * val - A[i][i - 1] * A[i - 1][i] * prev,
+                (A[i][i] - h.powi(2) * lambda) * val
+                    - A[i][i - 1] * A[i - 1][i] * prev,
                 val,
             )
         }
     }
 }
 
-fn muller_method<F>(f: F, mut x1: f64, mut x2: f64, mut x3: f64, eps: f64) -> f64
+fn muller_method<F>(
+    f: F,
+    mut x1: f64,
+    mut x2: f64,
+    mut x3: f64,
+    eps: f64,
+) -> f64
 where
     F: Fn(f64) -> f64,
 {
@@ -83,7 +102,9 @@ where
 
     // divided differences.
     let fst_div_diff = |x1, x2| (f(x1) - f(x2)) / (x1 - x2);
-    let snd_div_diff = |x1, x2, x3| (fst_div_diff(x1, x2) - fst_div_diff(x2, x3)) / (x1 - x3);
+    let snd_div_diff = |x1, x2, x3| {
+        (fst_div_diff(x1, x2) - fst_div_diff(x2, x3)) / (x1 - x3)
+    };
 
     let mut cond = false;
     let mut discrepancy = (x3 - x2).abs();
@@ -91,10 +112,17 @@ where
     // number of iterations.
     let n = 1000;
     for _ in 0..n {
-        let w = fst_div_diff(x3, x2) + fst_div_diff(x3, x1) - fst_div_diff(x2, x1);
+        let w = fst_div_diff(x3, x2) + fst_div_diff(x3, x1)
+            - fst_div_diff(x2, x1);
 
-        let denom1 = w + (w.powi(2) - 4. * f(x3) * snd_div_diff(x3, x2, x1)).sqrt();
-        let denom2 = w - (w.powi(2) - 4. * f(x3) * snd_div_diff(x3, x2, x1)).sqrt();
+        let denom1 = w
+            + (w.powi(2)
+                - 4. * f(x3) * snd_div_diff(x3, x2, x1))
+            .sqrt();
+        let denom2 = w
+            - (w.powi(2)
+                - 4. * f(x3) * snd_div_diff(x3, x2, x1))
+            .sqrt();
 
         let denom = if denom1.abs() > denom2.abs() {
             denom1
