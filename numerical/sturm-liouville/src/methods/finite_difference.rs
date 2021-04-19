@@ -1,11 +1,12 @@
-/// Replace Sturm–Liouville equation with finding eigenvalues
+/// Replace Sturm-Liouville equation with finding eigenvalues
 /// of matrix by finite difference approximation.
-pub fn fdm(
-    q: fn(f64) -> f64,
-    u0: fn() -> f64,
-    ul: fn(f64) -> f64,
-    N: i64,
-) -> Vec<f64> {
+///
+/// # Arguments
+///
+/// * `q` - Potential q(x).
+/// * `l` - End of the segment.
+/// * `N` - Number of intervals of the grid.
+pub fn fdm(q: fn(f64) -> f64, l: f64, N: i64) -> Vec<f64> {
     let h = 1. / (N as f64);
     let mut A = vec![];
 
