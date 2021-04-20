@@ -45,6 +45,7 @@ pub fn fdm(q: fn(f64) -> f64, l: f64, N: i64) -> Vec<f64> {
             2. * (n as f64).powi(2),
             3. * (n as f64).powi(2),
             1e-8,
+            100,
         );
         spectrum.push(lambda);
     }
@@ -95,6 +96,7 @@ fn muller_method<F>(
     mut x2: f64,
     mut x3: f64,
     eps: f64,
+    n: i64,
 ) -> f64
 where
     F: Fn(f64) -> f64,
@@ -110,8 +112,6 @@ where
     let mut cond = false;
     let mut discrepancy = (x3 - x2).abs();
 
-    // number of iterations.
-    let n = 100;
     for _ in 0..n {
         let w = fst_div_diff(x3, x2) + fst_div_diff(x3, x1)
             - fst_div_diff(x2, x1);
