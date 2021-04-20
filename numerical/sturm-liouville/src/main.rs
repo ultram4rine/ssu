@@ -5,6 +5,7 @@
     dead_code
 )]
 
+mod boundary_conditions;
 mod methods;
 
 use crate::methods::finite_difference::fdm;
