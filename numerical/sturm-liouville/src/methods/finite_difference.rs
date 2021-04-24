@@ -24,9 +24,11 @@ pub fn fdm(
             N - 1,
             lambda,
             h,
+            q,
             {
                 let i = (N - 2) as usize;
-                2. - h.powi(2) * lambda
+                2. + h.powi(2) * q(h * (N as f64 - 2.))
+                    - h.powi(2) * lambda
             },
             1.,
         )
@@ -49,7 +51,14 @@ pub fn fdm(
 }
 
 /// Recurrent formula for the characteristic polynomial (tail recursion).
-fn D(m: i64, lambda: f64, h: f64, val: f64, prev: f64) -> f64 {
+fn D(
+    m: i64,
+    lambda: f64,
+    h: f64,
+    q: fn(f64) -> f64,
+    val: f64,
+    prev: f64,
+) -> f64 {
     match m {
         0 => prev,
         1 => {
@@ -58,7 +67,10 @@ fn D(m: i64, lambda: f64, h: f64, val: f64, prev: f64) -> f64 {
                 m - 1,
                 lambda,
                 h,
-                (2. - h.powi(2) * lambda) * val,
+                q,
+                (2. + h.powi(2) * q(h * (m as f64 - 1.))
+                    - h.powi(2) * lambda)
+                    * val,
                 val,
             )
         }
@@ -68,7 +80,10 @@ fn D(m: i64, lambda: f64, h: f64, val: f64, prev: f64) -> f64 {
                 m - 1,
                 lambda,
                 h,
-                (2. - h.powi(2) * lambda) * val
+                q,
+                (2. + h.powi(2) * q(h * (m as f64 - 1.))
+                    - h.powi(2) * lambda)
+                    * val
                     - -1. * -1. * prev,
                 val,
             )
