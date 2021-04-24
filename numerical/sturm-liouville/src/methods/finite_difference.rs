@@ -18,30 +18,15 @@ pub fn fdm(
     n: i64,
 ) -> Vec<f64> {
     let h = l / (N as f64);
-    let mut A = vec![];
-
-    for i in 0..N - 1 {
-        A.push(vec![]);
-        for j in 0..N - 1 {
-            if i == j {
-                A[i as usize].push(2.);
-            } else if i == j + 1 || i == j - 1 {
-                A[i as usize].push(-1.);
-            } else {
-                A[i as usize].push(0.);
-            }
-        }
-    }
 
     let poly = |lambda| {
         D(
             N - 1,
             lambda,
-            A.clone(),
             h,
             {
                 let i = (N - 2) as usize;
-                A[i][i] - h.powi(2) * lambda
+                2. - h.powi(2) * lambda
             },
             1.,
         )
@@ -64,14 +49,7 @@ pub fn fdm(
 }
 
 /// Recurrent formula for the characteristic polynomial (tail recursion).
-fn D(
-    m: i64,
-    lambda: f64,
-    A: Vec<Vec<f64>>,
-    h: f64,
-    val: f64,
-    prev: f64,
-) -> f64 {
+fn D(m: i64, lambda: f64, h: f64, val: f64, prev: f64) -> f64 {
     match m {
         0 => prev,
         1 => {
@@ -79,9 +57,8 @@ fn D(
             D(
                 m - 1,
                 lambda,
-                A.clone(),
                 h,
-                (A[i][i] - h.powi(2) * lambda) * val,
+                (2. - h.powi(2) * lambda) * val,
                 val,
             )
         }
@@ -90,10 +67,9 @@ fn D(
             D(
                 m - 1,
                 lambda,
-                A.clone(),
                 h,
-                (A[i][i] - h.powi(2) * lambda) * val
-                    - A[i][i - 1] * A[i - 1][i] * prev,
+                (2. - h.powi(2) * lambda) * val
+                    - -1. * -1. * prev,
                 val,
             )
         }
