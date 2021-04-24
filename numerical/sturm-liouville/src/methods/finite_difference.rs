@@ -25,11 +25,8 @@ pub fn fdm(
             lambda,
             h,
             q,
-            {
-                let i = (N - 2) as usize;
-                2. + h.powi(2) * q(h * (N as f64 - 2.))
-                    - h.powi(2) * lambda
-            },
+            2. + h.powi(2) * q(h * (N as f64 - 2.))
+                - h.powi(2) * lambda,
             1.,
         )
     };
@@ -61,33 +58,27 @@ fn D(
 ) -> f64 {
     match m {
         0 => prev,
-        1 => {
-            let i = (m - 1) as usize;
-            D(
-                m - 1,
-                lambda,
-                h,
-                q,
-                (2. + h.powi(2) * q(h * (m as f64 - 1.))
-                    - h.powi(2) * lambda)
-                    * val,
-                val,
-            )
-        }
-        _ => {
-            let i = (m - 1) as usize;
-            D(
-                m - 1,
-                lambda,
-                h,
-                q,
-                (2. + h.powi(2) * q(h * (m as f64 - 1.))
-                    - h.powi(2) * lambda)
-                    * val
-                    - -1. * -1. * prev,
-                val,
-            )
-        }
+        1 => D(
+            m - 1,
+            lambda,
+            h,
+            q,
+            (2. + h.powi(2) * q(h * (m as f64 - 1.))
+                - h.powi(2) * lambda)
+                * val,
+            val,
+        ),
+        _ => D(
+            m - 1,
+            lambda,
+            h,
+            q,
+            (2. + h.powi(2) * q(h * (m as f64 - 1.))
+                - h.powi(2) * lambda)
+                * val
+                - -1. * -1. * prev,
+            val,
+        ),
     }
 }
 
