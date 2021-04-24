@@ -6,7 +6,17 @@
 /// * `q` - Potential q(x).
 /// * `l` - End of the segment.
 /// * `N` - Number of intervals of the grid.
-pub fn fdm(q: fn(f64) -> f64, l: f64, N: i64) -> Vec<f64> {
+/// * `x1, x2, x3` - Initial approximation.
+/// * `n` - Number of eigenvalues to find.
+pub fn fdm(
+    q: fn(f64) -> f64,
+    l: f64,
+    N: i64,
+    x1: f64,
+    x2: f64,
+    x3: f64,
+    n: i64,
+) -> Vec<f64> {
     let h = l / (N as f64);
     let mut A = vec![];
 
@@ -38,12 +48,12 @@ pub fn fdm(q: fn(f64) -> f64, l: f64, N: i64) -> Vec<f64> {
     };
 
     let mut spectrum = vec![];
-    for n in 1..=5 {
+    for i in 1..=n {
         let lambda = muller_method(
             poly,
-            1. * (n as f64).powi(2),
-            2. * (n as f64).powi(2),
-            3. * (n as f64).powi(2),
+            x1 * (i as f64).powi(2),
+            x2 * (i as f64).powi(2),
+            x3 * (i as f64).powi(2),
             1e-8,
             100,
         );

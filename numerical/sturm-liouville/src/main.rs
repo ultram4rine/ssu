@@ -29,7 +29,14 @@ fn q(x: f64) -> f64 {
 }
 
 fn main() {
-    let spectrum = fdm(q, 1., 128);
+    let l: f64 = 2.;
+    let (x1, x2, x3) = (
+        3_f64.powi(2) / l.powi(2) - 1.,
+        3_f64.powi(2) / l.powi(2),
+        3_f64.powi(2) / l.powi(2) + 1.,
+    );
+
+    let spectrum = fdm(q, l, 64, x1, x2, x3, 5);
     spectrum.into_iter().for_each(|lambda| {
         println!("{}", lambda);
     })
