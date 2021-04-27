@@ -6,12 +6,9 @@
 )]
 
 mod boundary_conditions;
-mod methods;
+mod finite_difference;
 
-use crate::methods::finite_difference::fdm;
-use crate::methods::galerkin::galerkin_method;
-use crate::methods::newton::newton_method;
-use crate::methods::shooting::shooting_method;
+use crate::finite_difference::fdm;
 
 /// Left boundary condition.
 fn u0() -> f64 {
