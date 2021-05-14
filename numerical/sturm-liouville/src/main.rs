@@ -12,7 +12,7 @@ use crate::finite_difference::fdm;
 
 /// A potential.
 fn q(x: f64) -> f64 {
-    x * x
+    0.
 }
 
 fn main() {
