@@ -23,7 +23,7 @@ fn main() {
         3_f64.powi(2) / l.powi(2) + 1.,
     );
 
-    let spectrum = fdm(q, l, 0., 1., 0., 1., 64, x1, x2, x3, 5);
+    let spectrum = fdm(q, l, 256, x1, x2, x3, 5);
     spectrum.into_iter().for_each(|lambda| {
         println!("{}", lambda);
     })

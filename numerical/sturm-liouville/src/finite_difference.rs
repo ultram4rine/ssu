@@ -7,18 +7,12 @@ use crate::muller::muller_method;
 ///
 /// * `q` - Potential q(x).
 /// * `l` - End of the segment.
-/// * `a1`, `a2` - coefficients of left boundary condition (a1 y'(0) + a2 y(0) = 0).
-/// * `b1`, `b2` - coefficients of right boundary condition (b1 y'(l) + b2 y(l) = 0).
 /// * `N` - Number of intervals of the grid.
 /// * `x1, x2, x3` - Initial approximation.
 /// * `n` - Number of eigenvalues to find.
 pub fn fdm(
     q: fn(f64) -> f64,
     l: f64,
-    a1: f64,
-    a2: f64,
-    b1: f64,
-    b2: f64,
     N: i64,
     x1: f64,
     x2: f64,
