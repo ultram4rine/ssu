@@ -1,14 +1,15 @@
+#include <iostream>
+#include <cmath>
+
 #include "1Doptimization.hpp"
 
-#include <iostream>
-
-// поиск интервала для метода золотого сечения.
+// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 array<double, 2> interval(twoDFunc f, int i, array<double, 2> init, double step)
 {
 	double d = 0.;
 
-	// интервал.
-	array<double, 2> ab = { 0,0 };
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+	array<double, 2> ab = {0, 0};
 
 	ab[0] = init[i];
 	double f_a = f(init);
@@ -47,19 +48,19 @@ array<double, 2> interval(twoDFunc f, int i, array<double, 2> init, double step)
 	return ab;
 }
 
-// обратная параболическая интерполяция.
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 double inverse_quadratic_interpolation(twoDFunc f, int i, array<double, 2> init, double eps)
 {
 	int n = 0;
 
-	// нужны три точки.
+	// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
 	array<double, 2> xn_0 = init;
 	array<double, 2> xn_1 = init;
 	array<double, 2> xn_2 = init;
 
 	array<double, 2> xnp = init;
 
-	// смещаем крайние точки.
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
 	xn_2[i] -= 0.3;
 	xn_1[i] -= 0.15;
 
@@ -91,19 +92,19 @@ double inverse_quadratic_interpolation(twoDFunc f, int i, array<double, 2> init,
 	return init[i];
 }
 
-// последовательная параболическая интерполяция.
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 double sequential_quadratic_interpolation(twoDFunc f, int i, array<double, 2> init, double eps)
 {
 	int n = 0;
 
-	// также нужны три точки.
+	// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
 	array<double, 2> xn_0 = init;
 	array<double, 2> xn_1 = init;
 	array<double, 2> xn_2 = init;
 
 	array<double, 2> xnp = init;
 
-	// также смещаем крайние точки.
+	// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
 	xn_2[i] -= 0.02;
 	xn_1[i] -= 0.01;
 
@@ -139,13 +140,13 @@ double sequential_quadratic_interpolation(twoDFunc f, int i, array<double, 2> in
 	return init[i];
 }
 
-// метод золотого сечения.
+// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 double golden_section_search(twoDFunc f, int i, array<double, 2> init, double eps)
 {
 	int n = 0;
-	// золотое соотношение.
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 	double phi = (1 + sqrt(5)) / 2;
-	// интервал.
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 	array<double, 2> ab = interval(f, i, init, 0.01);
 
 	double a = ab[0];
