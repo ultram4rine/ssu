@@ -9,7 +9,7 @@
 // Coordinate descent.
 array<double, 2> coordinate_descent(array<double, 2> x_0, double eps, twoDFunc f, oneDoptimization odp)
 {
-    // счетчик шагов.
+    // step counter.
     int n = 0;
 
     double f_k = f(x_0);
