@@ -6,6 +6,7 @@
 #include "rosenbrock.hpp"
 #include "regular_simplex.hpp"
 #include "random_search.hpp"
+#include "pattern_search.hpp"
 
 using namespace std;
 
@@ -24,6 +25,7 @@ int main()
      array<double, 2> end_point2 = rosenbrock(x_0, eps, f);
      array<double, 2> end_point3 = regular_simplex(x_0, eps, f);
      array<double, 2> end_point4 = random_search(x_0, eps, f);
+     array<double, 2> end_point5 = pattern_search(x_0, eps, f);
 
      /*cout << "Value at initial point" << '\n';
      cout << f(x_0) << '\n';*/
@@ -46,10 +48,16 @@ int main()
      cout << f(end_point3) << '\n'
           << '\n';
 
-          cout << "Random search method" << '\n'
+     cout << "Random search method" << '\n'
           << '\n';
      cout << "(" << end_point4[0] << ", " << end_point4[1] << ")" << '\n';
      cout << f(end_point4) << '\n'
+          << '\n';
+
+     cout << "Pattern search method" << '\n'
+          << '\n';
+     cout << "(" << end_point5[0] << ", " << end_point5[1] << ")" << '\n';
+     cout << f(end_point5) << '\n'
           << '\n';
 
      return 0;
