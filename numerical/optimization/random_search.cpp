@@ -5,22 +5,13 @@
 #include <array>
 #include <utility>
 
+#include "norm.hpp"
 #include "random_search.hpp"
 
 double fRand(double fMin, double fMax)
 {
     double f = (double)rand() / RAND_MAX;
     return fMin + f * (fMax - fMin);
-}
-
-double norm(array<double, 2> x)
-{
-    double sum = 0;
-    for (auto i = 0; i < 2; i++)
-    {
-        sum += x[i];
-    }
-    return sqrt(sum);
 }
 
 // Random search method.
