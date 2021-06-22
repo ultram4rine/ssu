@@ -17,12 +17,18 @@ array<double, 2> regular_simplex(array<double, 2> x_0, double eps, twoDFunc f)
 
     int n = x_0.size();
 
+    // length of simplex edge.
+    double l = 0.5;
+
     array<double, 2> x_1 = x_0;
     double f_2 = f(x_1);
-    array<array<double, 2>, x_0.size() + 1> nodes = build_simplex(x_1, f);
+
+    // build simplex.
+    array<array<double, 2>, x_0.size() + 1> nodes = build_simplex(x_1, l);
 
     do
     {
+
         // sort.
         for (auto i = 0; i < n; i++)
         {
@@ -59,13 +65,20 @@ array<double, 2> regular_simplex(array<double, 2> x_0, double eps, twoDFunc f)
         k++;
     } while (k < 1000);
 
-    return nodes[0];
+    double sum_x1 = 0, sum_x2 = 0;
+    for (auto i = 0; i < n + 1; i++)
+    {
+        sum_x1 += nodes[i][0];
+        sum_x2 += nodes[i][1];
+    }
+
+    array<double, 2> center = {sum_x1 / 3, sum_x2 / 3};
+
+    return center;
 }
 
-array<array<double, 2>, 3> build_simplex(array<double, 2> x_0, twoDFunc f)
+array<array<double, 2>, 3> build_simplex(array<double, 2> x_0, double l)
 {
-    // length of simplex edge.
-    double l = 0.25;
     int n = x_0.size();
 
     array<array<double, 2>, 3> nodes;
