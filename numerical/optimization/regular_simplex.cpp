@@ -12,6 +12,8 @@ array<double, 2> regular_simplex(array<double, 2> x_0, double eps, twoDFunc f)
 {
     // step counter;
     int k = 0;
+    // node counter;
+    int d = 0;
 
     int n = x_0.size();
 
@@ -35,37 +37,27 @@ array<double, 2> regular_simplex(array<double, 2> x_0, double eps, twoDFunc f)
             swap(nodes[i], nodes[smallestIndex]);
         }
 
-        for (auto i = 0; i < n + 1; i++)
-        {
-            cout << nodes[i][0] << " " << nodes[i][1] << ": " << f(nodes[i]) << '\n';
-        }
-
         array<double, 2> x_2 = reflect_node(nodes[n], nodes);
 
-        cout << "reflected: " << x_2[0] << " " << x_2[1] << '\n';
-
         f_2 = f(x_2);
-        cout << "f(x_2): " << f_2 << " f(x_1) " << f(nodes[n]) << '\n';
         if (f_2 < f(nodes[n]))
         {
-            cout << "next" << '\n';
             nodes[n] = x_2;
+            d = 0;
         }
         else
         {
-            cout << "prev" << '\n';
-            if (1 + k > n)
+            if (1 + d > n)
             {
                 break;
             }
-            x_1 = nodes[n - (1 + k)];
-            cout << x_1[0] << " " << x_1[1] << '\n'
-                 << '\n';
+            x_1 = nodes[n - (1 + d)];
 
-            k++;
+            d++;
         }
 
-    } while (/*fabs(f_2 - f(nodes[n])) > eps &&*/ k < 10);
+        k++;
+    } while (k < 1000);
 
     return nodes[0];
 }
@@ -73,7 +65,7 @@ array<double, 2> regular_simplex(array<double, 2> x_0, double eps, twoDFunc f)
 array<array<double, 2>, 3> build_simplex(array<double, 2> x_0, twoDFunc f)
 {
     // length of simplex edge.
-    int l = 1;
+    double l = 0.25;
     int n = x_0.size();
 
     array<array<double, 2>, 3> nodes;
@@ -103,8 +95,8 @@ array<double, 2> reflect_node(array<double, 2> x, array<array<double, 2>, 3> nod
     }
     sum[0] = sum[0] * 2 / n;
     sum[1] = sum[1] * 2 / n;
-    sum[0] -= nodes[n][0];
-    sum[1] -= nodes[n][1];
+    sum[0] -= x[0];
+    sum[1] -= x[1];
 
     return {sum[0], sum[1]};
 }
