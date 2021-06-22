@@ -7,6 +7,7 @@
 #include "regular_simplex.hpp"
 #include "random_search.hpp"
 #include "pattern_search.hpp"
+#include "nelder_mead.hpp"
 
 using namespace std;
 
@@ -26,6 +27,7 @@ int main()
      array<double, 2> min3 = regular_simplex(x_0, eps, f);
      array<double, 2> min4 = random_search(x_0, eps, f);
      array<double, 2> min5 = pattern_search(x_0, eps, f);
+     array<double, 2> min6 = nelder_mead(x_0, eps, f);
 
      /*cout << "Value at initial point" << '\n';
      cout << f(x_0) << '\n';*/
@@ -58,6 +60,12 @@ int main()
           << '\n';
      cout << "(" << min5[0] << ", " << min5[1] << ")" << '\n';
      cout << f(min5) << '\n'
+          << '\n';
+
+     cout << "Nelder-Mead method" << '\n'
+          << '\n';
+     cout << "(" << min6[0] << ", " << min6[1] << ")" << '\n';
+     cout << f(min6) << '\n'
           << '\n';
 
      return 0;
