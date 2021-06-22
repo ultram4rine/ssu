@@ -30,9 +30,5 @@ array<double, 2> ccd(array<double, 2> x_0, double eps, twoDFunc f, oneDoptimizat
         k++;
     } while (fabs(f_k1 - f_k) > eps && k < 10000);
 
-    cout << "Coordinate Descent Method" << '\n';
-    cout << "iterations: " << k << '\n'
-         << '\n';
-
     return x_k;
 }

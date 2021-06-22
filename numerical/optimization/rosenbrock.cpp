@@ -64,9 +64,5 @@ array<double, 2> rosenbrock(array<double, 2> x_0, double eps, twoDFunc f)
         n++;
     } while (fabs(f_k1 - f_k) > eps && n < 10000);
 
-    cout << "Rosenbrock Method" << '\n';
-    cout << "iterations: " << n << '\n'
-         << '\n';
-
     return x_k;
 }
