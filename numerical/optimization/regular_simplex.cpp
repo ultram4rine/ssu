@@ -7,6 +7,45 @@
 
 #include "regular_simplex.hpp"
 
+// Build regular simplex;
+array<array<double, 2>, 3> build_simplex(array<double, 2> x_0, double l)
+{
+    int n = x_0.size();
+
+    array<array<double, 2>, 3> nodes;
+    nodes[0] = x_0;
+
+    for (auto i = 1; i < n + 1; i++)
+    {
+        for (auto j = 0; j < n; j++)
+        {
+            nodes[i][j] = i == j + 1 ? nodes[0][j] + ((sqrt(n + 1) - 1) / (n * sqrt(2))) * l : nodes[0][j] + ((sqrt(n + 1) + n - 1) / (n * sqrt(2))) * l;
+        }
+    }
+
+    return nodes;
+}
+
+// Reflect given node relatively to canter of mass.
+array<double, 2> reflect_node(array<double, 2> x, array<array<double, 2>, 3> nodes)
+{
+    int n = x.size();
+
+    array<double, 2> sum = {0, 0};
+
+    for (auto i = 0; i < n; i++)
+    {
+        sum[0] += nodes[i][0];
+        sum[1] += nodes[i][1];
+    }
+    sum[0] = sum[0] * 2 / n;
+    sum[1] = sum[1] * 2 / n;
+    sum[0] -= x[0];
+    sum[1] -= x[1];
+
+    return {sum[0], sum[1]};
+}
+
 // Regular simplex method.
 array<double, 2> regular_simplex(array<double, 2> x_0, double eps, twoDFunc f)
 {
@@ -75,41 +114,4 @@ array<double, 2> regular_simplex(array<double, 2> x_0, double eps, twoDFunc f)
     array<double, 2> center = {sum_x1 / 3, sum_x2 / 3};
 
     return center;
-}
-
-array<array<double, 2>, 3> build_simplex(array<double, 2> x_0, double l)
-{
-    int n = x_0.size();
-
-    array<array<double, 2>, 3> nodes;
-    nodes[0] = x_0;
-
-    for (auto i = 1; i < n + 1; i++)
-    {
-        for (auto j = 0; j < n; j++)
-        {
-            nodes[i][j] = i == j + 1 ? nodes[0][j] + ((sqrt(n + 1) - 1) / (n * sqrt(2))) * l : nodes[0][j] + ((sqrt(n + 1) + n - 1) / (n * sqrt(2))) * l;
-        }
-    }
-
-    return nodes;
-}
-
-array<double, 2> reflect_node(array<double, 2> x, array<array<double, 2>, 3> nodes)
-{
-    int n = x.size();
-
-    array<double, 2> sum = {0, 0};
-
-    for (auto i = 0; i < n; i++)
-    {
-        sum[0] += nodes[i][0];
-        sum[1] += nodes[i][1];
-    }
-    sum[0] = sum[0] * 2 / n;
-    sum[1] = sum[1] * 2 / n;
-    sum[0] -= x[0];
-    sum[1] -= x[1];
-
-    return {sum[0], sum[1]};
 }
